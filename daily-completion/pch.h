@@ -12,5 +12,7 @@
 
 // 本解决方案其他项目依赖
 #include "YFramework/YFrameworkDef.h"
+#include "KNodeDll/KNodeDllDef.h"
+#include "UIControl/UIControlDef.h"
 
 #endif //PCH_H

@@ -42,6 +42,12 @@
     <ClInclude Include="App\PointApp.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Storage\IStorage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage\PlayerPrefsStorage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="daily-completion.cpp">
@@ -60,6 +66,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="App\PointApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Storage\PlayerPrefsStorage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
