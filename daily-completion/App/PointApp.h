@@ -5,13 +5,20 @@ using namespace YFramework;
 class PointApp : public BaseSingleton<PointApp>
 {
 	friend BaseSingleton<PointApp>;
-	PointApp() = default;
+	PointApp();
 public:
 	void Init();
 
-	template<typename T, typename... Args>
-	T* Get(const std::string& strKey, Args&&... args);
-private:
+	template <typename T>
+	shared_ptr<T> Get();
+public:
 	IocContainer _ioc;
 };
+
+template <typename T>
+shared_ptr<T> PointApp::Get()
+{
+	return _ioc.Get<T>();
+}
+
 

@@ -27,13 +27,7 @@
     <ClInclude Include="Singleton\BaseSingleton.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="IOCContainer\Any.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="IOCContainer\IOCContainer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="IOCContainer\NonCopyable.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Delegate\Delegate.h">

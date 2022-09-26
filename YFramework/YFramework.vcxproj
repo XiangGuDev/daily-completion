@@ -161,10 +161,8 @@
     <ClInclude Include="BindableProperty\BindableProperty.h" />
     <ClInclude Include="Command\ICommand.h" />
     <ClInclude Include="Delegate\Delegate.h" />
-    <ClInclude Include="IOCContainer\Any.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IOCContainer\IOCContainer.h" />
-    <ClInclude Include="IOCContainer\NonCopyable.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Singleton\BaseSingleton.h" />
     <ClInclude Include="YFrameworkDef.h" />

@@ -1,83 +1,156 @@
-#pragma once
-#include<string>
-#include<unordered_map>
-#include<memory>
-#include<functional>
-#include "Any.h"
-#include "NonCopyable.h"
+#ifndef Injector_Injector_h
+#define Injector_Injector_h
+
+#include <unordered_map>
+#include <memory>
+#include <functional>
+#include <cassert>
+#include <mutex>
+#include <typeinfo>
 
 namespace YFramework
 {
-	class IocContainer : NonCopyable
+	using std::shared_ptr;
+	using std::make_shared;
+	using std::function;
+	using std::pair;
+	using std::unordered_map;
+	using std::size_t;
+	using std::recursive_mutex;
+	using std::lock_guard;
+
+	//
+	// Injector
+	// Inversion of Control (IoC) container.
+	// Let's you create a type-safe mapping of class hierarchies by injecting constructor arguments.
+	//
+	// Idea and code based upon:
+	// http://www.codeproject.com/Articles/567981/AnplusIOCplusContainerplususingplusVariadicplusTem
+	//
+	//
+	// See usage examples @ https://github.com/GoatHunter/goatnative-inject
+	class IocContainer
 	{
 	public:
-		IocContainer() = default;
-		~IocContainer() = default;
+		template <typename T, typename... Dependencies>
+		IocContainer& registerClass()
+		{
+			lock_guard<recursive_mutex> lockGuard{ _mutex };
 
-		template<class T, typename Depend, typename... Args>
-		typename std::enable_if<!std::is_base_of<T, Depend>::value>::type RegisterSub(const std::string& strKey) {
-			std::function<T* (Args&&...)> function = [](Args&&... args) { return new T(new Depend(std::forward<Args>(args)...)); };//通过闭包擦除了参数类型
-			RegisterSub(strKey, std::move(function));
+			auto creator = [this]() -> T*
+			{
+				return new T(Get<Dependencies>()...);
+			};
+
+			_typesToCreators.insert(pair<size_t, function<void*()>>{typeid(T).hash_code(), creator});
+
+			return *this;
 		}
 
-		template<class T, typename Depend, typename... Args>
-		typename std::enable_if<std::is_base_of<T, Depend>::value>::type RegisterSub(const std::string& strKey) {
-			std::function<T* (Args&&...)> function = [](Args&&... args) { return new Depend(std::forward<Args>(args)...); };
-			RegisterSub(strKey, std::move(function));
+		template <typename T>
+		IocContainer& RegisterInstance(shared_ptr<T> instance)
+		{
+			lock_guard<recursive_mutex> lockGuard{ _mutex };
+
+			shared_ptr<IHolder> holder = shared_ptr<Holder<T>>{ new Holder<T>{instance} };
+
+			_typesToInstances.insert(pair<size_t, shared_ptr<IHolder>>{typeid(T).hash_code(), holder});
+
+			return *this;
 		}
 
-		template <class T, typename... Args>
-		void Register(const std::string& strKey) {
-			std::function<T*(Args&&...)> function = [](Args&&... args) {return new T(std::forward<Args>(args)...);};
-			RegisterSub(strKey, std::move(function));
+		template <typename T, typename... Dependencies>
+		IocContainer& Register()
+		{
+			lock_guard<recursive_mutex> lockGuard{ _mutex };
+
+			auto instance = make_shared<T>(Get<Dependencies>()...);
+
+			return RegisterInstance<T>(instance);
 		}
 
-		template<class T, typename... Args>
-		T* Get(const std::string& strKey, Args&&... args) {
-			if (m_creatorMap.find(strKey) == m_creatorMap.end())
-				return nullptr;
+		template <typename Interface, typename RegisteredConcreteClass>
+		IocContainer& RegisterInterface()
+		{
+			lock_guard<recursive_mutex> lockGuard{ _mutex };
 
-			Any resolver = m_creatorMap[strKey];
-			std::function<T* (Args&&...)> function = resolver.AnyCast<std::function<T* (Args&&...)>>();
-			return function(std::forward<Args>(args)...);
+			auto instanceGetter = [this]() -> shared_ptr<IHolder>
+			{
+				auto instance = Get<RegisteredConcreteClass>();
+				shared_ptr<IHolder> holder = shared_ptr<Holder<Interface>>{ new Holder<Interface>{ instance } };
+
+				return holder;
+			};
+
+			_interfacesToInstanceGetters.insert(pair<size_t, function<shared_ptr<IHolder>()>>{typeid(Interface).hash_code(), instanceGetter});
+
+			return *this;
 		}
 
-		template<class T, typename... Args>
-		std::shared_ptr<T> GetShared(const std::string& strKey, Args&&... args) {
-			T* t = Get<T>(strKey, std::forward<Args>(args)...);
-			return std::shared_ptr<T>(t);
+
+		template <typename T>
+		shared_ptr<T> Get()
+		{
+			lock_guard<recursive_mutex> lockGuard{ _mutex };
+
+			// Try getting registered singleton or instance.
+			if (_typesToInstances.find(typeid(T).hash_code()) != _typesToInstances.end())
+			{
+				// get as reference to avoid refcount increment
+				auto& iholder = _typesToInstances[typeid(T).hash_code()];
+
+				auto holder = dynamic_cast<Holder<T>*>(iholder.get());
+				return holder->_instance;
+			} // Otherwise attempt getting the creator and act as factory.
+			else if (_typesToCreators.find(typeid(T).hash_code()) != _typesToCreators.end())
+			{
+				auto& creator = _typesToCreators[typeid(T).hash_code()];
+
+				return shared_ptr<T>{(T*)creator()};
+			}
+			else if (_interfacesToInstanceGetters.find(typeid(T).hash_code()) != _interfacesToInstanceGetters.end())
+			{
+				auto& instanceGetter = _interfacesToInstanceGetters[typeid(T).hash_code()];
+
+				auto iholder = instanceGetter();
+
+				auto holder = dynamic_cast<Holder<T>*>(iholder.get());
+				return holder->_instance;
+			}
+
+			// If you debug, in some debuggers (e.g Apple's lldb in Xcode) it will breakpoint in this assert
+			// and by looking in the stack trace you'll be able to see which class you forgot to map.
+			assert(false && "One of your injected dependencies isn't mapped, please check your mappings.");
+
+			return nullptr;
 		}
 
 	private:
-		void RegisterSub(const std::string& strKey, Any&& constructor) {
-			if (m_creatorMap.find(strKey) != m_creatorMap.end())
-				throw std::invalid_argument("this key has already exist!");
 
-			//通过Any擦除了不同类型的构造器
-			m_creatorMap.emplace(strKey, constructor);
-		}
+		struct IHolder
+		{
+			virtual ~IHolder() = default;
+		};
 
-	private:
-		std::unordered_map<std::string, Any> m_creatorMap;
+		template <typename T>
+		struct Holder : public IHolder
+		{
+			Holder(shared_ptr<T> instance) : _instance(instance)
+			{}
+
+			shared_ptr<T> _instance;
+		};
+
+		// Holds instances - keeps singletons and custom registered instances
+		unordered_map<size_t, shared_ptr<IHolder>> _typesToInstances;
+		// Holds creators used to instansiate a type
+		unordered_map<size_t, function<void*()>> _typesToCreators;
+
+		unordered_map<size_t, function<shared_ptr<IHolder>()>> _interfacesToInstanceGetters;
+
+		recursive_mutex _mutex;
+
 	};
-}
+} // namespace goatnative
 
-//----------------使用方法---------------------------------------------------------
-//IocContainer ioc;
-////注册继承对象
-//ioc.RegisterSub<A, DerivedC>("C");      //配置依赖关系
-//ioc.RegisterSub<A, DerivedB, int, double>("B");   //注册时要注意DerivedB的参数int和double
-//
-////注册普通对象
-//ioc.Register<Bus>("Bus");
-//ioc.Register<Car>("Car");
-//
-//auto c = ioc.GetShared<A>("C");
-//c->Func();
-//auto b = ioc.GetShared<A>("B", 1, 2.0); //还要传入参数
-//b->Func();
-//
-//auto bus = ioc.GetShared<Bus>("Bus");
-//bus->Func();
-//auto car = ioc.GetShared<Car>("Car");
-//car->Func();
+#endif

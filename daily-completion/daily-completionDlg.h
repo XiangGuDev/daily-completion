@@ -38,7 +38,7 @@ public:
 	void OnEnemyCntChanged(int val);
 	afx_msg void OnDestroy();
 private:
-	GameModel *_gameModel;
+	std::shared_ptr<GameModel> _gameModel;
 };
 
 

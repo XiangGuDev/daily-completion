@@ -2,13 +2,15 @@
 #include "PointApp.h"
 #include "../Model/GameModel.h"
 
-void PointApp::Init()
+PointApp::PointApp()
 {
-	_ioc.Register<GameModel>("GameModel");
+	Init();
 }
 
-template<typename T, typename... Args>
-T* PointApp::Get(const std::string& strKey, Args&&... args)
+
+void PointApp::Init()
 {
-	return _ioc.Get<T>(key, args);
+	_ioc.Register<GameModel>();
 }
+
+
