@@ -13,34 +13,10 @@
 #endif
 
 using namespace YFramework;
-class CounterModel : public BaseSingleton<CounterModel>
-{
-	friend class BaseSingleton<CounterModel>;
-	CounterModel()
-	{
-		_cnt = 10;
-	}
-public:
-	int Get()
-	{
-		return _cnt;
-	}
-	void Set(int val)
-	{
-		if (val != _cnt)
-		{
-			_cnt = val;
-			OnCountChanged.Invoke(val);
-		}
-	}
-public:
-	Delegate<void(int)> OnCountChanged;
-private:
-	int _cnt;
-};
 
 CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DAILYCOMPLETION_DIALOG, pParent)
+	, _cnt(10)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -54,6 +30,7 @@ BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(ID_KILLENEMY, &CdailycompletionDlg::OnBnClickedKillenemy)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -66,9 +43,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
-	CounterModel::Instance()->OnCountChanged += [&](int val) {
-		UpdateLog();
-	};
+	_cnt.OnCountChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 	// TODO: 在此添加额外的初始化代码
 	UpdateLog();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -111,13 +86,18 @@ HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 }
 void CdailycompletionDlg::OnBnClickedKillenemy()
 {
-	auto cnt = CounterModel::Instance()->Get();
-	CounterModel::Instance()->Set(max(cnt-1, 0));
+	auto cnt = _cnt.Get();
+	_cnt.Set(max(cnt-1, 0));
+}
+
+void CdailycompletionDlg::OnEnemyCntChanged(int val)
+{
+	UpdateLog();
 }
 
 void CdailycompletionDlg::UpdateLog()
 {
-	auto cnt = CounterModel::Instance()->Get();
+	auto cnt = _cnt.Get();
 	if (cnt == 0)
 	{
 		static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(L"游戏结束！");
@@ -128,4 +108,12 @@ void CdailycompletionDlg::UpdateLog()
 		strInfo.Format(L"剩下%d只怪物！", cnt);
 		static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(strInfo);
 	}
+}
+
+
+void CdailycompletionDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	_cnt.OnCountChanged -= std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 }

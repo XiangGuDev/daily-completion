@@ -5,19 +5,19 @@
 // PROJECTLOADER_API 函数视为是从 DLL 导入的，而此 DLL 则将用此宏定义的
 // 符号视为是被导出的。
 
-#ifdef YFRAMEWORK_MODULE
-#define YFRAMEWORK_API __declspec(dllexport)
-#else
-#define YFRAMEWORK_API __declspec(dllimport)
-#ifdef DEBUG
-#pragma comment(lib, "YFrameworkd.lib")
-#else
-#pragma comment(lib, "YFramework.lib")
-#endif
-#endif
+//#ifdef YFRAMEWORK_MODULE
+//#define YFRAMEWORK_API __declspec(dllexport)
+//#else
+//#define YFRAMEWORK_API __declspec(dllimport)
+//#ifdef DEBUG
+//#pragma comment(lib, "YFrameworkd.lib")
+//#else
+//#pragma comment(lib, "YFramework.lib")
+//#endif
+//#endif
 
 // 头文件包含
 #include "Delegate/Delegate.h"
 #include "Singleton/BaseSingleton.h"
 #include "IOCContainer/IOCContainer.h"
-
+#include "Singleton/BaseSingleton.h"

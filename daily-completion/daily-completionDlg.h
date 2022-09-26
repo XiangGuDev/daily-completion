@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "YFramework/BindableProperty/BindableProperty.h"
 
 // CdailycompletionDlg 对话框
 class CdailycompletionDlg : public CDialogEx
@@ -32,11 +33,10 @@ protected:
 public:
 	void UpdateLog();
 	afx_msg void OnBnClickedKillenemy();
+	void OnEnemyCntChanged(int val);
+	afx_msg void OnDestroy();
+private:
+	YFramework::BindableProperty<int> _cnt;
 };
 
 
-class SA
-{
-public:
-	static void Log(){}
-};

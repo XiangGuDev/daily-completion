@@ -121,11 +121,6 @@ namespace YFramework
 		}
 	};
 
-	class YFRAMEWORK_API SB
-	{
-	public:
-		void Log();
-	};
 }
 //----------------使用方法---------------------------------------------------------
 //void sum2(int a) {
@@ -140,7 +135,7 @@ namespace YFramework
 //	Test()
 //	{
 //		d2 += [](int a) {};
-//		//d2 += std::bind(&Test::sum, *this, std::placeholders::_1);
+//		//d2 += std::bind(&Test::sum, this, std::placeholders::_1);
 //		d2 += sum2;
 //		d2.Invoke(5);
 //	}
