@@ -154,3 +154,13 @@ namespace YFramework
 } // namespace goatnative
 
 #endif
+
+
+//----------------使用方法---------------------------------------------------------
+//IocContainer ioc;
+//
+//ioc.Register<int>();
+//auto k = ioc.Get<int>();
+//*k = 1;
+//k = ioc.Get<int>();
+//*k = 2;
