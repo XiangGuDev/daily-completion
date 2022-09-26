@@ -12,10 +12,32 @@
 #define new DEBUG_NEW
 #endif
 
-
-// CdailycompletionDlg 对话框
-
-
+using namespace YFramework;
+class CounterModel : public BaseSingleton<CounterModel>
+{
+	friend class BaseSingleton<CounterModel>;
+	CounterModel()
+	{
+		_cnt = 10;
+	}
+public:
+	int Get()
+	{
+		return _cnt;
+	}
+	void Set(int val)
+	{
+		if (val != _cnt)
+		{
+			_cnt = val;
+			OnCountChanged.Invoke(val);
+		}
+	}
+public:
+	Delegate<void(int)> OnCountChanged;
+private:
+	int _cnt;
+};
 
 CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DAILYCOMPLETION_DIALOG, pParent)
@@ -31,11 +53,11 @@ void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(ID_KILLENEMY, &CdailycompletionDlg::OnBnClickedKillenemy)
 END_MESSAGE_MAP()
 
 
 // CdailycompletionDlg 消息处理程序
-
 BOOL CdailycompletionDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -44,9 +66,11 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
-
+	CounterModel::Instance()->OnCountChanged += [&](int val) {
+		UpdateLog();
+	};
 	// TODO: 在此添加额外的初始化代码
-
+	UpdateLog();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -85,4 +109,23 @@ HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
+void CdailycompletionDlg::OnBnClickedKillenemy()
+{
+	auto cnt = CounterModel::Instance()->Get();
+	CounterModel::Instance()->Set(max(cnt-1, 0));
+}
 
+void CdailycompletionDlg::UpdateLog()
+{
+	auto cnt = CounterModel::Instance()->Get();
+	if (cnt == 0)
+	{
+		static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(L"游戏结束！");
+	}
+	else
+	{
+		CString strInfo;
+		strInfo.Format(L"剩下%d只怪物！", cnt);
+		static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(strInfo);
+	}
+}

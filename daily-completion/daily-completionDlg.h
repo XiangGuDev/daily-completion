@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 // CdailycompletionDlg 对话框
 class CdailycompletionDlg : public CDialogEx
 {
@@ -30,4 +29,14 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	void UpdateLog();
+	afx_msg void OnBnClickedKillenemy();
+};
+
+
+class SA
+{
+public:
+	static void Log(){}
 };
