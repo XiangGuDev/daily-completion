@@ -21,3 +21,4 @@
 #include "Singleton/BaseSingleton.h"
 #include "IOCContainer/IOCContainer.h"
 #include "Singleton/BaseSingleton.h"
+#include "Command/ICommand.h"

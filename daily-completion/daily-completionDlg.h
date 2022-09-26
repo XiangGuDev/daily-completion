@@ -4,15 +4,17 @@
 
 #pragma once
 #include "YFramework/BindableProperty/BindableProperty.h"
+#include "YFramework/Singleton/BaseSingleton.h"
 
+using namespace YFramework;
+class GameModel;
 // CdailycompletionDlg 对话框
-class CdailycompletionDlg : public CDialogEx
+class CdailycompletionDlg 
+	: public CDialogEx
 {
-// 构造
 public:
 	CdailycompletionDlg(CWnd* pParent = nullptr);	// 标准构造函数
-
-// 对话框数据
+	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DAILYCOMPLETION_DIALOG };
 #endif
@@ -36,7 +38,7 @@ public:
 	void OnEnemyCntChanged(int val);
 	afx_msg void OnDestroy();
 private:
-	YFramework::BindableProperty<int> _cnt;
+	GameModel *_gameModel;
 };
 
 

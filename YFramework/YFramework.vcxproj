@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BindableProperty\BindableProperty.h" />
+    <ClInclude Include="Command\ICommand.h" />
     <ClInclude Include="Delegate\Delegate.h" />
     <ClInclude Include="IOCContainer\Any.h" />
     <ClInclude Include="framework.h" />

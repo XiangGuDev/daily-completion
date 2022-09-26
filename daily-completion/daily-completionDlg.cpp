@@ -7,16 +7,16 @@
 #include "daily-completion.h"
 #include "daily-completionDlg.h"
 #include "afxdialogex.h"
+#include "App/PointApp.h"
+#include "Model/GameModel.h"
+#include "Cmd/KillCmd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-using namespace YFramework;
-
 CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DAILYCOMPLETION_DIALOG, pParent)
-	, _cnt(10)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -43,7 +43,8 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
-	_cnt.OnCountChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
+	_gameModel = PointApp::Instance()->Get<GameModel>("GameModel");
+	_gameModel->_cnt.OnCountChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 	// TODO: 在此添加额外的初始化代码
 	UpdateLog();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -86,8 +87,7 @@ HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 }
 void CdailycompletionDlg::OnBnClickedKillenemy()
 {
-	auto cnt = _cnt.Get();
-	_cnt.Set(max(cnt-1, 0));
+	std::make_shared<CKillCmd>()->Excute();
 }
 
 void CdailycompletionDlg::OnEnemyCntChanged(int val)
@@ -97,7 +97,7 @@ void CdailycompletionDlg::OnEnemyCntChanged(int val)
 
 void CdailycompletionDlg::UpdateLog()
 {
-	auto cnt = _cnt.Get();
+	auto cnt = _gameModel->_cnt.Get();
 	if (cnt == 0)
 	{
 		static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(L"游戏结束！");
@@ -115,5 +115,5 @@ void CdailycompletionDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	_cnt.OnCountChanged -= std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
+	_gameModel->_cnt.OnCountChanged -= std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 }

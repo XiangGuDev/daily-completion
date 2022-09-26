@@ -33,6 +33,15 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Cmd\KillCmd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="App\PointApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="daily-completion.cpp">
@@ -42,6 +51,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Cmd\KillCmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="App\PointApp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
