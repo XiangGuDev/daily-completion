@@ -42,10 +42,10 @@
     <ClInclude Include="App\PointApp.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Storage\IStorage.h">
+    <ClInclude Include="Storage\PlayerPrefsStorage.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Storage\PlayerPrefsStorage.h">
+    <ClInclude Include="Storage\IBaseStorage.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

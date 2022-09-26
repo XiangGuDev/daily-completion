@@ -208,7 +208,7 @@
     <ClInclude Include="App\PointApp.h" />
     <ClInclude Include="Storage\PlayerPrefsStorage.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Storage\IStorage.h" />
+    <ClInclude Include="Storage\IBaseStorage.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include "framework.h"
 #include "daily-completion.h"
 #include "daily-completionDlg.h"
+#include "App/PointApp.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -73,6 +74,7 @@ BOOL CdailycompletionApp::InitInstance()
 
 	CdailycompletionDlg dlg;
 	m_pMainWnd = &dlg;
+	PointApp::Instance()->Init();
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{

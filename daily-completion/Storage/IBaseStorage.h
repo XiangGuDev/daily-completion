@@ -2,10 +2,10 @@
 
 #include <string>
 
-class IIStorage
+class IBaseStorage
 {
 public:
-	virtual ~IIStorage(){}
+	virtual ~IBaseStorage(){}
 	virtual void SaveInt(std::string key, int val) = 0;
 	virtual int LoadInt(std::string key) = 0;
 };

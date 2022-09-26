@@ -157,6 +157,7 @@ namespace YFramework
 
 
 //----------------使用方法---------------------------------------------------------
+// // 普通单例
 //IocContainer ioc;
 //
 //ioc.Register<int>();
@@ -164,3 +165,7 @@ namespace YFramework
 //*k = 1;
 //k = ioc.Get<int>();
 //*k = 2;
+
+// // 接口的注册要注意，需要先注册子类
+//ioc.Register<PlayerPrefsStorage>();
+//ioc.RegisterInterface<IBaseStorage, PlayerPrefsStorage>();

@@ -1,9 +1,11 @@
 #pragma once
-#include "IStorage.h"
+#include "IBaseStorage.h"
+
 class PlayerPrefsStorage :
-	public IIStorage
+	public IBaseStorage
 {
 public:
+	PlayerPrefsStorage();
 	void SaveInt(std::string key, int val);
 	int LoadInt(std::string key);
 private:
