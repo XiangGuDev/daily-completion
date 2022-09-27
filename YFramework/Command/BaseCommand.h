@@ -1,23 +1,23 @@
 #pragma once
-#include <memory>
 
 namespace YFramework
 {
-	class IModel
+	class ICommand
 	{
 		friend class BaseApp;
 	public:
-		virtual ~IModel(){}
+		virtual ~ICommand() {}
 	protected:
 		virtual void Init() = 0;
+		virtual void Execute() = 0;
 		virtual BaseApp * GetApp() = 0;
 		virtual void SetApp(BaseApp *app) = 0;
 	};
 
-	class BaseModel : public IModel
+	class BaseCommand : public ICommand
 	{
 	public:
-		virtual ~BaseModel() {}
+		virtual ~BaseCommand() {}
 	protected:
 		virtual BaseApp * GetApp()
 		{

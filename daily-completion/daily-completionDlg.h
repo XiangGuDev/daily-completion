@@ -5,12 +5,12 @@
 #pragma once
 #include "YFramework/BindableProperty/BindableProperty.h"
 #include "YFramework/Singleton/BaseSingleton.h"
+#include "Controller/DCController.h"
 
 using namespace YFramework;
 class GameModel;
 // CdailycompletionDlg 对话框
-class CdailycompletionDlg 
-	: public CDialogEx
+class CdailycompletionDlg : public CDialogEx, public DCController
 {
 public:
 	CdailycompletionDlg(CWnd* pParent = nullptr);	// 标准构造函数

@@ -199,6 +199,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Controller\DCController.h" />
     <ClInclude Include="System\AchievementSystem.h" />
     <ClInclude Include="Cmd\KillCmd.h" />
     <ClInclude Include="daily-completion.h" />

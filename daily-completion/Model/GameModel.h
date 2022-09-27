@@ -13,6 +13,6 @@ public:
 	BindableProperty<int> _score;
 	BindableProperty<int> _gold;
 protected:
-	virtual void Init() {};
+	virtual void Init() override;
 };
 

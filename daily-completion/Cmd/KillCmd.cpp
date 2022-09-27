@@ -3,9 +3,13 @@
 #include "KillCmd.h"
 #include "../App/PointApp.h"
 
-void CKillCmd::Excute()
+void CKillCmd::Init()
 {
-	auto gameModel = PointApp::Instance()->GetModel<GameModel>();
+}
+
+void CKillCmd::Execute()
+{
+	auto gameModel = GetApp()->GetModel<GameModel>();
 	auto cnt = gameModel->_cnt.Get();
 	gameModel->_cnt.Set(max(0, cnt - 1));
 }

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "GameModel.h"
-#include "../App/PointApp.h"
 #include "../Storage/PlayerPrefsStorage.h"
 
 GameModel::GameModel()
@@ -8,7 +7,12 @@ GameModel::GameModel()
 	, _score(0)
 	, _gold(0)
 {
-	auto storage = PointApp::Instance()->GetUtility<PlayerPrefsStorage>();
+	
+}
+
+void GameModel::Init()
+{
+	auto storage = GetApp()->GetUtility<PlayerPrefsStorage>();
 	if (storage->DataExist(L"EnemyCnt"))
 	{
 		_cnt.Set(storage->LoadInt(L"EnemyCnt"));
@@ -18,7 +22,7 @@ GameModel::GameModel()
 		_cnt.Set(10);
 	}
 	_cnt.OnValueChanged += [&](int oldVal, int val) {
-		auto storage = PointApp::Instance()->GetUtility<PlayerPrefsStorage>();
+		auto storage = GetApp()->GetUtility<PlayerPrefsStorage>();
 		storage->SaveInt(L"EnemyCnt", val);
 	};
 }

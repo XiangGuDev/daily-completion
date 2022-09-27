@@ -9,7 +9,6 @@
 #include "afxdialogex.h"
 #include "Model/GameModel.h"
 #include "Cmd/KillCmd.h"
-#include "App/PointApp.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -44,7 +43,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	_gameModel = PointApp::Instance()->GetModel<GameModel>();
+	_gameModel = GetApp()->GetModel<GameModel>();
 	_gameModel->_cnt.OnValueChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 	// TODO: 在此添加额外的初始化代码
 	UpdateLog();
@@ -88,7 +87,7 @@ HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 }
 void CdailycompletionDlg::OnBnClickedKillenemy()
 {
-	std::make_shared<CKillCmd>()->Excute();
+	GetApp()->SendCommand<CKillCmd>();
 }
 
 void CdailycompletionDlg::OnEnemyCntChanged(int val)

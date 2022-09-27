@@ -7,10 +7,10 @@ namespace YFramework
 		friend class BaseApp;
 	public:
 		virtual ~ISystem() {}
-		virtual BaseApp * GetApp() = 0;
-		virtual void SetApp(BaseApp *app) = 0;
 	protected:
 		virtual void Init() = 0;
+		virtual BaseApp * GetApp() = 0;
+		virtual void SetApp(BaseApp *app) = 0;
 	};
 
 	class BaseSystem : public ISystem

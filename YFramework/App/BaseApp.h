@@ -37,6 +37,12 @@ namespace YFramework
 			_bInit = true;
 		}
 
+		template<typename TCommand>
+		void SendCommand();
+		
+		template<typename TCommand>
+		void SendCommand(shared_ptr<TCommand> command);
+
 		template<typename TUtility>
 		void RegisterUtility(shared_ptr<TUtility> utility);
 
@@ -65,6 +71,26 @@ namespace YFramework
 		IocContainer _ioc;
 		bool _bInit;
 	};
+
+	template<typename TCommand>
+	inline void BaseApp::SendCommand()
+	{
+		static_assert(std::is_base_of<ICommand, TCommand>::value, "类型必须继承自ICommand");
+		shared_ptr<ICommand> cmd = std::make_shared<TCommand>();
+		cmd->SetApp(this);
+		cmd->Init();
+		cmd->Execute();
+	}
+
+	template<typename TCommand>
+	inline void BaseApp::SendCommand(shared_ptr<TCommand> command)
+	{
+		static_assert(std::is_base_of<ICommand, TCommand>::value, "类型必须继承自ICommand");
+		shared_ptr<ICommand> cmd = command;
+		cmd->SetApp(this);
+		cmd->Init();
+		cmd->Execute();
+	}
 
 	template<typename TUtility>
 	inline void BaseApp::RegisterUtility(shared_ptr<TUtility> utility)

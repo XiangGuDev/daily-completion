@@ -1,8 +1,9 @@
 #pragma once
-#include "YFramework/Command/ICommand.h"
+#include "YFramework/Command/BaseCommand.h"
 
-class CKillCmd : YFramework::ICommand
+class CKillCmd : public BaseCommand
 {
-public:
-	virtual void Excute() override;
+protected:
+	virtual void Init() override;
+	virtual void Execute() override;
 };

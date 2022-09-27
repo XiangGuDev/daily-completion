@@ -24,5 +24,6 @@
 #include "Utility/Utility.h"
 #include "Model/BaseModel.h"
 #include "System/BaseSystem.h"
-#include "Command/ICommand.h"
+#include "Command/BaseCommand.h"
+#include "Controller/BaseController.h"
 #include "App/BaseApp.h"

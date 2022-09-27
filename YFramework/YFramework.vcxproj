@@ -161,7 +161,8 @@
   <ItemGroup>
     <ClInclude Include="App\BaseApp.h" />
     <ClInclude Include="BindableProperty\BindableProperty.h" />
-    <ClInclude Include="Command\ICommand.h" />
+    <ClInclude Include="Command\BaseCommand.h" />
+    <ClInclude Include="Controller\BaseController.h" />
     <ClInclude Include="Delegate\Delegate.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IOCContainer\IOCContainer.h" />

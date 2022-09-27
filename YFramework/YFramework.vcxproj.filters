@@ -36,9 +36,6 @@
     <ClInclude Include="BindableProperty\BindableProperty.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Command\ICommand.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="App\BaseApp.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -49,6 +46,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="System\BaseSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\BaseController.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Command\BaseCommand.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
