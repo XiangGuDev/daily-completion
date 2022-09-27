@@ -24,12 +24,13 @@ namespace YFramework
 		{
 			if (val != _val)
 			{
+				T oldVal = _val;
 				_val = val;
-				OnCountChanged.Invoke(_val);
+				OnValueChanged.Invoke(oldVal, _val);
 			}
 		}
 	public:
-		Delegate<void(T)> OnCountChanged;
+		Delegate<void(T, T)> OnValueChanged;
 	private:
 		T _val;
 	};

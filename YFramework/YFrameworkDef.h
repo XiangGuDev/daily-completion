@@ -23,5 +23,6 @@
 #include "Singleton/BaseSingleton.h"
 #include "Utility/Utility.h"
 #include "Model/BaseModel.h"
+#include "System/BaseSystem.h"
 #include "Command/ICommand.h"
 #include "App/BaseApp.h"

@@ -45,7 +45,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	_gameModel = PointApp::Instance()->GetModel<GameModel>();
-	_gameModel->_cnt.OnCountChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
+	_gameModel->_cnt.OnValueChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 	// TODO: 在此添加额外的初始化代码
 	UpdateLog();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -116,5 +116,5 @@ void CdailycompletionDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	_gameModel->_cnt.OnCountChanged -= std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
+	_gameModel->_cnt.OnValueChanged -= std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 }

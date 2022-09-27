@@ -11,7 +11,7 @@ namespace YFramework
 		}
 		virtual ~BaseApp(){}
 
-		// 初始化App
+		// 初始化App（需要在程序入口点调用）
 		void Init()
 		{
 			if(_bInit) return;
@@ -19,38 +19,49 @@ namespace YFramework
 			// 子类初始化
 			OnInit();
 
+			// 提供外部配置化接口
+			OnRegisterConfig.Invoke(this);
+
 			// 初始化所有model
 			for (int i = 0; i < _modelList.size(); i++)
 			{
 				_modelList[i]->Init();
 			}
 
-			//// 初始化所有system
-			//for (int i = 0; i < _systemList.Count; i++)
-			//{
-			//	_systemList[i].Init();
-			//}
+			// 初始化所有system
+			for (int i = 0; i < _systemList.size(); i++)
+			{
+				_systemList[i]->Init();
+			}
 
 			_bInit = true;
 		}
 
+		template<typename TUtility>
+		void RegisterUtility(shared_ptr<TUtility> utility);
+
 		template<typename TModel>
 		void RegisterModel(shared_ptr<TModel> model);
 
-		template<typename TUtility>
-		void RegisterUtility(shared_ptr<TUtility> utility);
+		template<typename TSystem>
+		void RegisterSystem(shared_ptr<TSystem> system);
+
+		template <typename TUtility>
+		shared_ptr<TUtility> GetUtility();
 
 		template <typename TModel>
 		shared_ptr<TModel> GetModel();
 
-		template <typename TUtility>
-		shared_ptr<TUtility> GetUtility();
+		template <typename TSystem>
+		shared_ptr<TSystem> GetSystem();
 	protected:
 		// 子类实现
 		virtual void OnInit() = 0;
 	public:
-		std::vector<std::shared_ptr<IModel>> _modelList;
+		Delegate<void(BaseApp *)> OnRegisterConfig;
 	private:
+		std::vector<std::shared_ptr<IModel>> _modelList;
+		std::vector<std::shared_ptr<ISystem>> _systemList;
 		IocContainer _ioc;
 		bool _bInit;
 	};
@@ -75,11 +86,31 @@ namespace YFramework
 			_modelList.push_back(mdl);
 	}
 
+	template<typename TSystem>
+	inline void BaseApp::RegisterSystem(shared_ptr<TSystem> system)
+	{
+		static_assert(std::is_base_of<ISystem, TSystem>::value, "类型必须继承自ISystem");
+		_ioc.RegisterInstance<TSystem>(system);
+		shared_ptr<ISystem> sys = system;
+		sys->SetApp(this);
+		if (_bInit)
+			sys->Init();
+		else
+			_systemList.push_back(sys);
+	}
+
 	template <typename TModel>
 	shared_ptr<TModel> BaseApp::GetModel()
 	{
 		static_assert(std::is_base_of<IModel, TModel>::value, "类型必须继承自IModel");
 		return _ioc.Get<TModel>();
+	}
+
+	template<typename TSystem>
+	shared_ptr<TSystem> BaseApp::GetSystem()
+	{
+		static_assert(std::is_base_of<ISystem, TSystem>::value, "类型必须继承自ISystem");
+		return _ioc.Get<TSystem>();
 	}
 
 	template <typename TUtility>
