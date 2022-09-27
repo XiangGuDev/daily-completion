@@ -8,8 +8,8 @@ class PointApp : public BaseApp, public BaseSingleton<PointApp>
 {
 	friend BaseSingleton<PointApp>;
 	PointApp() {}
-public:
-	void Init();
+protected:
+	virtual void OnInit();
 };
 
 

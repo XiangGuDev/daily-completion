@@ -8,7 +8,7 @@ GameModel::GameModel()
 	, _score(0)
 	, _gold(0)
 {
-	auto storage = PointApp::Instance()->Get<PlayerPrefsStorage>();
+	auto storage = PointApp::Instance()->GetUtility<PlayerPrefsStorage>();
 	if (storage->DataExist(L"EnemyCnt"))
 	{
 		_cnt.Set(storage->LoadInt(L"EnemyCnt"));
@@ -18,7 +18,7 @@ GameModel::GameModel()
 		_cnt.Set(10);
 	}
 	_cnt.OnCountChanged += [&](int val) {
-		auto storage = PointApp::Instance()->Get<PlayerPrefsStorage>();
+		auto storage = PointApp::Instance()->GetUtility<PlayerPrefsStorage>();
 		storage->SaveInt(L"EnemyCnt", val);
 	};
 }

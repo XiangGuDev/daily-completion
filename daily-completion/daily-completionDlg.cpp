@@ -44,7 +44,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	_gameModel = PointApp::Instance()->Get<GameModel>();
+	_gameModel = PointApp::Instance()->GetModel<GameModel>();
 	_gameModel->_cnt.OnCountChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 	// TODO: 在此添加额外的初始化代码
 	UpdateLog();
