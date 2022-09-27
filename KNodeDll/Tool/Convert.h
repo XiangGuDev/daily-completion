@@ -94,6 +94,22 @@ namespace CommBase
 		static bool Text2Bool(LPCTSTR val);
 
 		/**
+		* 字符串 转换成Int
+		* 
+		* @param [in] val		要格式化的数值
+		* @return	返回字符串格式化后的Int
+		*/
+		static int Text2Int(LPCTSTR val);
+
+		/**
+		* 字符串 转换成Float
+		* 
+		* @param [in] val		要格式化的数值
+		* @return	返回字符串格式化后的Float
+		*/
+		static double Text2Float(LPCTSTR val);
+
+		/**
 		*  @brief    double 取整
 		*
 		*  @param    double dNum 被取整的数字

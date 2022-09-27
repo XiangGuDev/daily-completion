@@ -39,6 +39,15 @@
     <ClInclude Include="Command\ICommand.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="App\BaseApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BaseModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Utility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

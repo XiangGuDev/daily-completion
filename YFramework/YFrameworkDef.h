@@ -21,4 +21,7 @@
 #include "Singleton/BaseSingleton.h"
 #include "IOCContainer/IOCContainer.h"
 #include "Singleton/BaseSingleton.h"
+#include "Utility/Utility.h"
+#include "Model/BaseModel.h"
 #include "Command/ICommand.h"
+#include "App/BaseApp.h"

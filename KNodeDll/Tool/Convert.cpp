@@ -138,6 +138,18 @@ namespace CommBase
 		return str == _T("TRUE") || str == _T("T");
 	}
 
+	int CConvert::Text2Int(LPCTSTR val)
+	{
+		CString str(val);
+		return _ttoi(str);
+	}
+
+	double CConvert::Text2Float(LPCTSTR val)
+	{
+		CString str(val);
+		return _tstof(str);
+	}
+
 	double CConvert::FloatQuZheng(double dNum)
 	{
 		CString strNum = Float2Text(dNum , -1);

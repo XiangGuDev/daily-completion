@@ -159,13 +159,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="App\BaseApp.h" />
     <ClInclude Include="BindableProperty\BindableProperty.h" />
     <ClInclude Include="Command\ICommand.h" />
     <ClInclude Include="Delegate\Delegate.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IOCContainer\IOCContainer.h" />
+    <ClInclude Include="Model\BaseModel.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Singleton\BaseSingleton.h" />
+    <ClInclude Include="Utility\Utility.h" />
     <ClInclude Include="YFrameworkDef.h" />
   </ItemGroup>
   <ItemGroup>

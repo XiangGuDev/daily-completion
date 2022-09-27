@@ -6,8 +6,9 @@ class PlayerPrefsStorage :
 {
 public:
 	PlayerPrefsStorage();
-	void SaveInt(std::string key, int val);
-	int LoadInt(std::string key);
+	void SaveInt(const CString &key, int val);
+	int LoadInt(const CString &key);
+	bool DataExist(const CString &key);
 private:
 	CXmlDocument _doc;
 	CString _strDataPath;
