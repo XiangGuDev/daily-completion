@@ -2,14 +2,13 @@
 
 namespace YFramework 
 {
-	class ISystem
+	class ISystem : public IGetModel, public IGetUtility, public ISetApp
 	{
 		friend class BaseApp;
 	public:
 		virtual ~ISystem() {}
 	protected:
 		virtual void Init() = 0;
-		virtual BaseApp * GetApp() = 0;
 		virtual void SetApp(BaseApp *app) = 0;
 	};
 
@@ -17,6 +16,7 @@ namespace YFramework
 	{
 	public:
 		virtual ~BaseSystem() {}
+	private:
 		virtual BaseApp * GetApp() override
 		{
 			return _app;

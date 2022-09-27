@@ -12,7 +12,7 @@ GameModel::GameModel()
 
 void GameModel::Init()
 {
-	auto storage = GetApp()->GetUtility<PlayerPrefsStorage>();
+	auto storage = GetUtility<PlayerPrefsStorage>();
 	if (storage->DataExist(L"EnemyCnt"))
 	{
 		_cnt.Set(storage->LoadInt(L"EnemyCnt"));
@@ -22,7 +22,7 @@ void GameModel::Init()
 		_cnt.Set(10);
 	}
 	_cnt.OnValueChanged += [&](int oldVal, int val) {
-		auto storage = GetApp()->GetUtility<PlayerPrefsStorage>();
+		auto storage = GetUtility<PlayerPrefsStorage>();
 		storage->SaveInt(L"EnemyCnt", val);
 	};
 }

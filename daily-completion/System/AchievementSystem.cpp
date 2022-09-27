@@ -4,7 +4,7 @@
 
 void AchievementSystem::Init()
 {
-	auto gameModel = GetApp()->GetModel<GameModel>();
+	auto gameModel = GetModel<GameModel>();
 	int preCnt = gameModel->_cnt.Get();
 	gameModel->_cnt.OnValueChanged += [&](int oldVal, int val)
 	{

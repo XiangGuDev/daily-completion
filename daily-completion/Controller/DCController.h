@@ -4,11 +4,11 @@
 
 using namespace YFramework;
 
-class DCController : IController
+class DCController : public IController
 {
 public:
 	virtual ~DCController(){}
-protected:
+private:
 	virtual BaseApp * GetApp() override
 	{
 		return PointApp::Instance();

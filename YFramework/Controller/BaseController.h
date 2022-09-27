@@ -2,11 +2,11 @@
 
 namespace YFramework
 {
-	class IController
+	class IController : public IGetModel, public IGetSystem, public ISendCommand
 	{
 	public:
 		virtual ~IController(){}
-	protected:
+	private:
 		virtual BaseApp * GetApp() = 0;
 	};
 }

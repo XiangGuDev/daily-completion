@@ -1,6 +1,7 @@
 #pragma once
 #include <YFramework/IOCContainer/IOCContainer.h>
 #include "YFramework/App/BaseApp.h"
+#include "YFramework/EventSystem/EventSystem.h"
 
 using namespace YFramework;
 

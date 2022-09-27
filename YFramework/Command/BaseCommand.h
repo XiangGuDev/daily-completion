@@ -2,7 +2,7 @@
 
 namespace YFramework
 {
-	class ICommand
+	class ICommand : public IGetUtility, public IGetModel, public IGetSystem, public ISetApp
 	{
 		friend class BaseApp;
 	public:
@@ -10,15 +10,13 @@ namespace YFramework
 	protected:
 		virtual void Init() = 0;
 		virtual void Execute() = 0;
-		virtual BaseApp * GetApp() = 0;
-		virtual void SetApp(BaseApp *app) = 0;
 	};
 
 	class BaseCommand : public ICommand
 	{
 	public:
 		virtual ~BaseCommand() {}
-	protected:
+	private:
 		virtual BaseApp * GetApp()
 		{
 			return _app;

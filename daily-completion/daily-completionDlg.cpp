@@ -43,7 +43,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	_gameModel = GetApp()->GetModel<GameModel>();
+	_gameModel = GetModel<GameModel>();
 	_gameModel->_cnt.OnValueChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
 	// TODO: 在此添加额外的初始化代码
 	UpdateLog();
@@ -87,7 +87,7 @@ HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 }
 void CdailycompletionDlg::OnBnClickedKillenemy()
 {
-	GetApp()->SendCommand<CKillCmd>();
+	SendCommand<CKillCmd>();
 }
 
 void CdailycompletionDlg::OnEnemyCntChanged(int val)

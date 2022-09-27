@@ -9,7 +9,7 @@ void CKillCmd::Init()
 
 void CKillCmd::Execute()
 {
-	auto gameModel = GetApp()->GetModel<GameModel>();
+	auto gameModel = GetModel<GameModel>();
 	auto cnt = gameModel->_cnt.Get();
 	gameModel->_cnt.Set(max(0, cnt - 1));
 }
