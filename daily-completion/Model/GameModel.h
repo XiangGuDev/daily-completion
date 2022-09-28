@@ -5,6 +5,11 @@
 
 using namespace YFramework;
 
+struct GameOverEvent
+{
+
+};
+
 class GameModel : public BaseModel
 {
 public:

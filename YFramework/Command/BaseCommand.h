@@ -2,7 +2,7 @@
 
 namespace YFramework
 {
-	class ICommand : public IGetUtility, public IGetModel, public IGetSystem, public ISetApp
+	class ICommand : public IGetUtility, public IGetModel, public IGetSystem, public ISetApp, public ISendEvent, public ISendCommand
 	{
 		friend class BaseApp;
 	public:

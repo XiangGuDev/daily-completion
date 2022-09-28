@@ -3,7 +3,7 @@
 
 namespace YFramework
 {
-	class IModel : public IGetUtility, public ISetApp
+	class IModel : public IGetUtility, public ISetApp, public ISendEvent
 	{
 		friend class BaseApp;
 	public:

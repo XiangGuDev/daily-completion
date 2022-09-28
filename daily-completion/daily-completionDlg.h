@@ -6,6 +6,7 @@
 #include "YFramework/BindableProperty/BindableProperty.h"
 #include "YFramework/Singleton/BaseSingleton.h"
 #include "Controller/DCController.h"
+#include "Model/GameModel.h"
 
 using namespace YFramework;
 class GameModel;
@@ -37,6 +38,7 @@ public:
 	afx_msg void OnBnClickedKillenemy();
 	void OnEnemyCntChanged(int val);
 	afx_msg void OnDestroy();
+	void OnGameOver(std::shared_ptr<GameOverEvent> e);
 private:
 	std::shared_ptr<GameModel> _gameModel;
 };

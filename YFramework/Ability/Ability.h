@@ -2,10 +2,6 @@
 
 namespace YFramework
 {
-	class IUtility;
-	class IModel;
-	class ISystem;
-	class ICommand;
 	class BaseApp;
 
 	class IGetApp
@@ -14,6 +10,8 @@ namespace YFramework
 		friend class IGetModel;
 		friend class IGetSystem;
 		friend class ISendCommand;
+		friend class ISendEvent;
+		friend class IRegisterEvent;
 	public:
 		virtual ~IGetApp() {}
 	private:
@@ -27,6 +25,40 @@ namespace YFramework
 		virtual ~ISetApp() {}
 	private:
 		virtual void SetApp(BaseApp *app) = 0;
+	};
+
+	class ISendEvent : public IGetApp
+	{
+	public:
+		virtual ~ISendEvent() {}
+		template<typename TEvent>
+		void SendEvent()
+		{
+			this->GetApp()->SendEvent<TEvent>();
+		}
+
+		template<typename TEvent>
+		void SendEvent(TEvent e)
+		{
+			this->GetApp()->SendEvent<TEvent>(e);
+		}
+	};
+
+	class IRegisterEvent : public IGetApp
+	{
+	public:
+		virtual ~IRegisterEvent() {}
+		template<typename TEvent>
+		void RegisterEvent(std::function<void(std::shared_ptr<TEvent>)> onEvent)
+		{
+			this->GetApp()->RegisterEvent<TEvent>(onEvent);
+		}
+
+		template<typename TEvent>
+		void UnRegisterEvent(std::function<void(std::shared_ptr<TEvent>)> onEvent)
+		{
+			this->GetApp()->UnRegisterEvent<TEvent>(onEvent);
+		}
 	};
 
 	class IGetUtility : public IGetApp
