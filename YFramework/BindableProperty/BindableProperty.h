@@ -2,9 +2,6 @@
 
 namespace YFramework 
 {
-	template<typename>
-	class BindableProperty;
-
 	template<typename T>
 	class BindableProperty 
 	{
@@ -26,12 +23,22 @@ namespace YFramework
 			{
 				T oldVal = _val;
 				_val = val;
-				OnValueChanged.Invoke(oldVal, _val);
+				_OnValueChanged.Invoke(oldVal, _val);
 			}
 		}
-	public:
-		Delegate<void(T, T)> OnValueChanged;
+
+		void RegisterChangedEvent(std::function<void(T, T)> onEvent)
+		{
+			_OnValueChanged += onEvent;
+		}
+
+		void UnRegisterChangedEvent(std::function<void(T, T)> onEvent)
+		{
+			_OnValueChanged -= onEvent;
+		}
+
 	private:
+		Delegate<void(T, T)> _OnValueChanged;
 		T _val;
 	};
 }

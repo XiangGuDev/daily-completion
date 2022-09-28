@@ -45,7 +45,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	_gameModel = GetModel<GameModel>();
-	_gameModel->_cnt.OnValueChanged += std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
+	_gameModel->_cnt.RegisterChangedEvent(std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1));
 	RegisterEvent<GameOverEvent>(std::bind(&CdailycompletionDlg::OnGameOver, this, std::placeholders::_1));
 	UpdateLog();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -99,12 +99,9 @@ void CdailycompletionDlg::OnEnemyCntChanged(int val)
 void CdailycompletionDlg::UpdateLog()
 {
 	auto cnt = _gameModel->_cnt.Get();
-	if (cnt)
-	{
-		CString strInfo;
-		strInfo.Format(L"剩下%d只怪物！", cnt);
-		static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(strInfo);
-	}
+	CString strInfo;
+	strInfo.Format(L"剩下%d只怪物！", cnt);
+	static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(strInfo);
 }
 
 
@@ -112,11 +109,11 @@ void CdailycompletionDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	_gameModel->_cnt.OnValueChanged -= std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1);
+	_gameModel->_cnt.UnRegisterChangedEvent(std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1));
 	UnRegisterEvent<GameOverEvent>(std::bind(&CdailycompletionDlg::OnGameOver, this, std::placeholders::_1));
 }
 
 void CdailycompletionDlg::OnGameOver(std::shared_ptr<GameOverEvent> e)
 {
-	static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(L"游戏结束！");
+	::MessageBox(::GetActiveWindow(), L"游戏结束", L"", MB_OK);
 }

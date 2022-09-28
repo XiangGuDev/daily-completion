@@ -21,10 +21,10 @@ void GameModel::Init()
 	{
 		_cnt.Set(10);
 	}
-	_cnt.OnValueChanged += [&](int oldVal, int val) {
+	_cnt.RegisterChangedEvent([&](int oldVal, int val) {
 		auto storage = GetUtility<PlayerPrefsStorage>();
 		storage->SaveInt(L"EnemyCnt", val);
 		if (val == 0)
 			SendEvent<GameOverEvent>();
-	};
+	});
 }
