@@ -9,6 +9,5 @@ void PointApp::OnInit()
 {
 	RegisterUtility(std::make_shared<PlayerPrefsStorage>());
 	RegisterModel(std::make_shared<GameModel>());
-	RegisterSystem(std::make_shared<AchievementSystem>());
 }
 

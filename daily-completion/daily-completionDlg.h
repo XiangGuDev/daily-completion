@@ -8,9 +8,13 @@
 #include "Controller/DCController.h"
 #include "Model/GameModel.h"
 
-using namespace YFramework;
+
 class GameModel;
-// CdailycompletionDlg 对话框
+namespace ControlUI
+{
+	class CTreeListCtrl;
+}
+
 class CdailycompletionDlg : public CDialogEx, public DCController
 {
 public:
@@ -19,12 +23,8 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DAILYCOMPLETION_DIALOG };
 #endif
-
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
-
-// 实现
 protected:
 	HICON m_hIcon;
 
@@ -34,13 +34,12 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	void UpdateLog();
-	afx_msg void OnBnClickedKillenemy();
-	void OnEnemyCntChanged(int val);
 	afx_msg void OnDestroy();
-	void OnGameOver(std::shared_ptr<GameOverEvent> e);
 private:
+	CButton _btnMenu; // 菜单
+	CBCGPEdit _editSearch; // 搜索
 	std::shared_ptr<GameModel> _gameModel;
+	std::shared_ptr<ControlUI::CTreeListCtrl> _taskList; // 任务列表
 };
 
 

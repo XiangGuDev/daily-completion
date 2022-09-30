@@ -8,7 +8,9 @@
 #include "daily-completionDlg.h"
 #include "afxdialogex.h"
 #include "Model/GameModel.h"
-#include "Cmd/KillCmd.h"
+
+using namespace YFramework;
+using namespace ControlUI;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -28,7 +30,6 @@ void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(ID_KILLENEMY, &CdailycompletionDlg::OnBnClickedKillenemy)
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
@@ -43,11 +44,47 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+	static CFont font;
+	font.DeleteObject();
+	font.CreatePointFont(135, _T("微软雅黑"));
+
+
+	int menuLen = 10; // 菜单边长
+	// 任务列表
+	{
+		CRect rcTree;
+		GetClientRect(&rcTree);
+		menuLen = rcTree.Height() / 10;
+		rcTree.bottom -= menuLen;
+
+		_taskList = std::make_shared<CTreeListCtrl>();
+		_taskList->Create(rcTree, this);
+		_taskList->ShowWindow(SW_SHOW);
+	}
+
+	// 搜索
+	{
+		CRect rcSc;
+		GetClientRect(&rcSc);
+		rcSc.top += rcSc.Height() * 9 / 10;
+		rcSc.right -= menuLen;
+		_editSearch.Create(WS_BORDER | WS_CHILD | WS_VISIBLE, rcSc, this, IDC_SEARCH);
+		_editSearch.ShowWindow(SW_SHOW);
+		_editSearch.SetFont(&font);//设置字体
+		_editSearch.SetWindowText(_T("hello edit control!"));
+	}
+	// 菜单
+	{
+		CRect rcMenu;
+		GetClientRect(&rcMenu);
+		rcMenu.top += rcMenu.Height() * 9 / 10;
+		rcMenu.left = rcMenu.right - menuLen;
+		_btnMenu.Create(L"...", WS_BORDER | WS_CHILD | WS_VISIBLE, rcMenu, this, IDC_MENU);
+		_btnMenu.ShowWindow(SW_SHOW);
+	}
+
 	// TODO: 在此添加额外的初始化代码
 	_gameModel = GetModel<GameModel>();
-	_gameModel->_cnt.RegisterChangedEvent(std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1));
-	RegisterEvent<GameOverEvent>(std::bind(&CdailycompletionDlg::OnGameOver, this, std::placeholders::_1));
-	UpdateLog();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -86,34 +123,13 @@ HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-void CdailycompletionDlg::OnBnClickedKillenemy()
-{
-	SendCommand<CKillCmd>();
-}
-
-void CdailycompletionDlg::OnEnemyCntChanged(int val)
-{
-	UpdateLog();
-}
-
-void CdailycompletionDlg::UpdateLog()
-{
-	auto cnt = _gameModel->_cnt.Get();
-	CString strInfo;
-	strInfo.Format(L"剩下%d只怪物！", cnt);
-	static_cast<CStatic *>(GetDlgItem(IDC_STATIC))->SetWindowText(strInfo);
-}
-
 
 void CdailycompletionDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
-
-	_gameModel->_cnt.UnRegisterChangedEvent(std::bind(&CdailycompletionDlg::OnEnemyCntChanged, this, std::placeholders::_1));
-	UnRegisterEvent<GameOverEvent>(std::bind(&CdailycompletionDlg::OnGameOver, this, std::placeholders::_1));
+	_btnMenu.DestroyWindow();
+	_editSearch.DestroyWindow();
+	_taskList->DestroyWindow();
 }
 
-void CdailycompletionDlg::OnGameOver(std::shared_ptr<GameOverEvent> e)
-{
-	::MessageBox(::GetActiveWindow(), L"游戏结束", L"", MB_OK);
-}
+

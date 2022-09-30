@@ -201,7 +201,6 @@
   <ItemGroup>
     <ClInclude Include="Controller\DCController.h" />
     <ClInclude Include="System\AchievementSystem.h" />
-    <ClInclude Include="Cmd\KillCmd.h" />
     <ClInclude Include="daily-completion.h" />
     <ClInclude Include="daily-completionDlg.h" />
     <ClInclude Include="framework.h" />
@@ -215,7 +214,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\AchievementSystem.cpp" />
-    <ClCompile Include="Cmd\KillCmd.cpp" />
     <ClCompile Include="daily-completion.cpp" />
     <ClCompile Include="daily-completionDlg.cpp" />
     <ClCompile Include="Model\GameModel.cpp" />

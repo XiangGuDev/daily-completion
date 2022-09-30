@@ -10,6 +10,9 @@
 // 添加要在此处预编译的标头
 #include "framework.h"
 
+// 三方组件
+#include <BCGCBProInc.h>
+
 // 本解决方案其他项目依赖
 #include "YFramework/YFrameworkDef.h"
 #include "KNodeDll/KNodeDllDef.h"
