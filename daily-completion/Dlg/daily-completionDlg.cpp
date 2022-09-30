@@ -7,7 +7,10 @@
 #include "../daily-completion.h"
 #include "daily-completionDlg.h"
 #include "afxdialogex.h"
-#include "../Model/GameModel.h"
+#include "../System/TaskSystem.h"
+#include "../Model/Task.h"
+#include "../Adapters/TaskAdapter.h"
+#include "../Control/CTaskListCtrl.h"
 
 using namespace YFramework;
 using namespace ControlUI;
@@ -58,9 +61,20 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		menuLen = rcTree.Height() / 10;
 		rcTree.bottom -= menuLen;
 
-		_taskList = std::make_shared<CTreeListCtrl>();
-		_taskList->Create(rcTree, this);
-		_taskList->ShowWindow(SW_SHOW);
+		_taskList = std::make_shared<CTaskListCtrl>();
+		_taskList->Create(rcTree, this, IDC_TASKLIST);
+		CString strAppPath = CPathConfig::GetAppStartPath();
+		strAppPath.Append(L"/Output/界面配置.xml");
+		if (!_taskList->LoadConfig(strAppPath, L"任务列表"))
+		{
+			::MessageBox(::GetActiveWindow(), L"配置文件读取失败！", L"提示", MB_OK);
+		}
+		_taskList->SetNofityWnd(m_hWnd);
+		_taskList->ShowHeader(true);
+		_taskList->SetHasGrid(true);
+		_taskList->SetAutoColumnWidth();
+
+		GetSystem<CTaskSystem>()->AddTask(std::make_shared<Task>());
 	}
 
 	// 搜索
@@ -89,7 +103,6 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	}
 
 	// TODO: 在此添加额外的初始化代码
-	_gameModel = GetModel<GameModel>();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -146,6 +159,7 @@ void CdailycompletionDlg::OnClickMenu()
 	if (nCmd == IDC_SETTINGS)
 	{
 		MessageBox(L"设置");
+		GetSystem<CTaskSystem>()->AddTask(std::make_shared<Task>());
 	}
 	else if (nCmd == IDC_ABOUT)
 	{
@@ -160,5 +174,4 @@ void CdailycompletionDlg::OnDestroy()
 	_editSearch.DestroyWindow();
 	_taskList->DestroyWindow();
 }
-
 

@@ -76,7 +76,7 @@ namespace CommBase
 		* @param [in] val		要格式化的数值
 		* @return	返回__int64格式化后的字符串
 		*/
-		static CString I642Text(__int64 val);
+		static CString Int2Text(__int64 val);
 
 		/**
 		* bool 转换成字符串

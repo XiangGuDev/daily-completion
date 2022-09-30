@@ -5,15 +5,13 @@
 #pragma once
 #include "YFramework/BindableProperty/BindableProperty.h"
 #include "YFramework/Singleton/BaseSingleton.h"
-#include "../Controller/DCController.h"
+#include "../Base/DCController.h"
 
-
-class GameModel;
 namespace ControlUI
 {
-	class CTreeListCtrl;
+	class CListCtrlDataSource;
 }
-
+class CTaskListCtrl;
 class CdailycompletionDlg : public CDialogEx, public DCController
 {
 public:
@@ -38,8 +36,7 @@ public:
 private:
 	CBCGPButton _btnMenu; // 菜单
 	CBCGPEdit _editSearch; // 搜索
-	std::shared_ptr<GameModel> _gameModel;
-	std::shared_ptr<ControlUI::CTreeListCtrl> _taskList; // 任务列表
+	std::shared_ptr<CTaskListCtrl> _taskList; // 任务列表
 };
 
 

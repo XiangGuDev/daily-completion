@@ -16,7 +16,7 @@ void PlayerPrefsStorage::SaveInt(const CString &key, int val)
 {
 	auto pRoot = _doc.GetElementRoot();
 	if (pRoot == NULL)return;
-	pRoot->SetAttrValue(key, CConvert::I642Text(val));
+	pRoot->SetAttrValue(key, CConvert::Int2Text(val));
 	_doc.SaveFile(_strDataPath, fmtXMLUTF8);
 }
 

@@ -30,9 +30,6 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Model\GameModel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="App\PointApp.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -42,13 +39,22 @@
     <ClInclude Include="Storage\IBaseStorage.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="System\AchievementSystem.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\DCController.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Dlg\daily-completionDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Task.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="System\TaskSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\DCController.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapters\TaskAdapter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\CTaskListCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,19 +65,22 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Model\GameModel.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="App\PointApp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Storage\PlayerPrefsStorage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="System\AchievementSystem.cpp">
+    <ClCompile Include="Dlg\daily-completionDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Dlg\daily-completionDlg.cpp">
+    <ClCompile Include="System\TaskSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapters\TaskAdapter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Control\CTaskListCtrl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

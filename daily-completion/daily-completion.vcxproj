@@ -200,12 +200,14 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Controller\DCController.h" />
-    <ClInclude Include="System\AchievementSystem.h" />
+    <ClInclude Include="Adapters\TaskAdapter.h" />
+    <ClInclude Include="Base\DCController.h" />
+    <ClInclude Include="Control\CTaskListCtrl.h" />
+    <ClInclude Include="System\TaskSystem.h" />
     <ClInclude Include="daily-completion.h" />
     <ClInclude Include="Dlg\daily-completionDlg.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Model\GameModel.h" />
+    <ClInclude Include="Model\Task.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App\PointApp.h" />
     <ClInclude Include="Storage\PlayerPrefsStorage.h" />
@@ -214,10 +216,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="System\AchievementSystem.cpp" />
+    <ClCompile Include="Adapters\TaskAdapter.cpp" />
+    <ClCompile Include="Control\CTaskListCtrl.cpp" />
+    <ClCompile Include="System\TaskSystem.cpp" />
     <ClCompile Include="daily-completion.cpp" />
     <ClCompile Include="Dlg\daily-completionDlg.cpp" />
-    <ClCompile Include="Model\GameModel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

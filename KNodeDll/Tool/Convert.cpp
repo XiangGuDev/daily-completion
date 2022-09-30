@@ -115,7 +115,7 @@ namespace CommBase
 		return strText;
 	}
 
-	CString CConvert::I642Text(__int64 val)
+	CString CConvert::Int2Text(__int64 val)
 	{
 		TCHAR buff[_CVTBUFSIZE] = {0};
 

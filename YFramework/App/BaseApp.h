@@ -49,6 +49,7 @@ namespace YFramework
 			_eventSystem.Send<TEvent>(e);
 		}
 
+		// Example£ºRegisterEvent<UpdateGridEvent>(std::bind(&CTaskListCtrl::UpdateList, this, std::placeholders::_1));
 		template<typename TEvent>
 		void RegisterEvent(std::function<void(std::shared_ptr<TEvent>)> onEvent)
 		{
