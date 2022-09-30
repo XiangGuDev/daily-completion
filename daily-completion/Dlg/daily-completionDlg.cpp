@@ -3,11 +3,11 @@
 //
 
 #include "pch.h"
-#include "framework.h"
-#include "daily-completion.h"
+#include "../framework.h"
+#include "../daily-completion.h"
 #include "daily-completionDlg.h"
 #include "afxdialogex.h"
-#include "Model/GameModel.h"
+#include "../Model/GameModel.h"
 
 using namespace YFramework;
 using namespace ControlUI;
@@ -29,6 +29,7 @@ void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
 	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_MENU_BTN, &CdailycompletionDlg::OnClickMenu)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
@@ -71,7 +72,10 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_editSearch.Create(WS_BORDER | WS_CHILD | WS_VISIBLE, rcSc, this, IDC_SEARCH);
 		_editSearch.ShowWindow(SW_SHOW);
 		_editSearch.SetFont(&font);//设置字体
-		_editSearch.SetWindowText(_T("hello edit control!"));
+		_editSearch.SetPrompt(_T("搜索"));
+		auto colTheme = _editSearch.GetColorTheme();
+		colTheme.m_clrBackground = RGB(240, 240, 240);
+		_editSearch.SetColorTheme(colTheme);
 	}
 	// 菜单
 	{
@@ -79,8 +83,9 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		GetClientRect(&rcMenu);
 		rcMenu.top += rcMenu.Height() * 9 / 10;
 		rcMenu.left = rcMenu.right - menuLen;
-		_btnMenu.Create(L"...", WS_BORDER | WS_CHILD | WS_VISIBLE, rcMenu, this, IDC_MENU);
+		_btnMenu.Create(L"···", WS_BORDER | WS_CHILD | WS_VISIBLE, rcMenu, this, IDC_MENU_BTN);
 		_btnMenu.ShowWindow(SW_SHOW);
+		_btnMenu.SetFont(&font);//设置字体
 	}
 
 	// TODO: 在此添加额外的初始化代码
@@ -122,6 +127,30 @@ void CdailycompletionDlg::OnPaint()
 HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CdailycompletionDlg::OnClickMenu()
+{
+	CPoint curPt;
+	GetCursorPos(&curPt);
+	CMenu rightMenu;
+	if (!rightMenu.LoadMenu(IDR_MENU))
+		return;
+
+	CMenu *pSubMenu = rightMenu.GetSubMenu(0);
+	if (pSubMenu == NULL)
+		return;
+
+	UINT nCmd = pSubMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD,
+		curPt.x, curPt.y, this);
+	if (nCmd == IDC_SETTINGS)
+	{
+		MessageBox(L"设置");
+	}
+	else if (nCmd == IDC_ABOUT)
+	{
+		MessageBox(L"关于");
+	}
 }
 
 void CdailycompletionDlg::OnDestroy()

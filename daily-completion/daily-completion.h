@@ -8,6 +8,11 @@
 	#error "include 'pch.h' before including this file for PCH"
 #endif
 
+// 程序单实例
+#define SCANSETTINGS_CLASSNAME _T("ScanSettingsWindowClass")
+#define APPMUTEX _T("Global\\ScanSettings")
+
+
 #include "resource.h"		// 主符号
 
 
@@ -19,14 +24,13 @@ class CdailycompletionApp : public CWinApp
 {
 public:
 	CdailycompletionApp();
-
-// 重写
 public:
 	virtual BOOL InitInstance();
-
-// 实现
-
+	virtual int ExitInstance();
+	BOOL RestrictOneInstance();
 	DECLARE_MESSAGE_MAP()
+private:
+	HANDLE m_hMutex;
 };
 
 extern CdailycompletionApp theApp;

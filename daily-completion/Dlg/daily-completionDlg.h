@@ -5,8 +5,7 @@
 #pragma once
 #include "YFramework/BindableProperty/BindableProperty.h"
 #include "YFramework/Singleton/BaseSingleton.h"
-#include "Controller/DCController.h"
-#include "Model/GameModel.h"
+#include "../Controller/DCController.h"
 
 
 class GameModel;
@@ -34,9 +33,10 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	afx_msg void OnClickMenu();
 	afx_msg void OnDestroy();
 private:
-	CButton _btnMenu; // 菜单
+	CBCGPButton _btnMenu; // 菜单
 	CBCGPEdit _editSearch; // 搜索
 	std::shared_ptr<GameModel> _gameModel;
 	std::shared_ptr<ControlUI::CTreeListCtrl> _taskList; // 任务列表

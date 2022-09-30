@@ -24,6 +24,7 @@
     <Keyword>MFCProj</Keyword>
     <RootNamespace>dailycompletion</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>每日一卷</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -80,7 +81,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Output</OutDir>
-    <TargetName>$(ProjectName)d</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -202,7 +203,7 @@
     <ClInclude Include="Controller\DCController.h" />
     <ClInclude Include="System\AchievementSystem.h" />
     <ClInclude Include="daily-completion.h" />
-    <ClInclude Include="daily-completionDlg.h" />
+    <ClInclude Include="Dlg\daily-completionDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Model\GameModel.h" />
     <ClInclude Include="pch.h" />
@@ -215,7 +216,7 @@
   <ItemGroup>
     <ClCompile Include="System\AchievementSystem.cpp" />
     <ClCompile Include="daily-completion.cpp" />
-    <ClCompile Include="daily-completionDlg.cpp" />
+    <ClCompile Include="Dlg\daily-completionDlg.cpp" />
     <ClCompile Include="Model\GameModel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
