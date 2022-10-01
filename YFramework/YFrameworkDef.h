@@ -22,6 +22,7 @@
 #include "IOCContainer/IOCContainer.h"
 #include "Singleton/BaseSingleton.h"
 #include "EventSystem/EventSystem.h"
+#include "BindableProperty/BindableProperty.h"
 
 #include "Ability/Ability.h"
 #include "Utility/IUtility.h"

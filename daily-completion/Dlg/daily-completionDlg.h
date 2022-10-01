@@ -33,6 +33,7 @@ protected:
 public:
 	afx_msg void OnClickMenu();
 	afx_msg void OnDestroy();
+	afx_msg void OnSearchKeyChanged();
 private:
 	CBCGPButton _btnMenu; // 菜单
 	CBCGPEdit _editSearch; // 搜索

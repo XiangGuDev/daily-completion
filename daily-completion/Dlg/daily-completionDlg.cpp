@@ -33,6 +33,7 @@ void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDC_MENU_BTN, &CdailycompletionDlg::OnClickMenu)
+	ON_EN_CHANGE(IDC_SEARCH, &CdailycompletionDlg::OnSearchKeyChanged)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
@@ -70,11 +71,9 @@ BOOL CdailycompletionDlg::OnInitDialog()
 			::MessageBox(::GetActiveWindow(), L"配置文件读取失败！", L"提示", MB_OK);
 		}
 		_taskList->SetNofityWnd(m_hWnd);
-		_taskList->ShowHeader(true);
-		_taskList->SetHasGrid(true);
+		_taskList->ShowHeader(false);
+		_taskList->SetHasGrid(false);
 		_taskList->SetAutoColumnWidth();
-
-		GetSystem<CTaskSystem>()->AddTask(std::make_shared<Task>());
 	}
 
 	// 搜索
@@ -98,6 +97,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		rcMenu.top += rcMenu.Height() * 9 / 10;
 		rcMenu.left = rcMenu.right - menuLen;
 		_btnMenu.Create(L"···", WS_BORDER | WS_CHILD | WS_VISIBLE, rcMenu, this, IDC_MENU_BTN);
+		_btnMenu.m_nFlatStyle = CBCGPButton::BUTTONSTYLE_NOBORDERS;
 		_btnMenu.ShowWindow(SW_SHOW);
 		_btnMenu.SetFont(&font);//设置字体
 	}
@@ -159,11 +159,14 @@ void CdailycompletionDlg::OnClickMenu()
 	if (nCmd == IDC_SETTINGS)
 	{
 		MessageBox(L"设置");
-		GetSystem<CTaskSystem>()->AddTask(std::make_shared<Task>());
 	}
 	else if (nCmd == IDC_ABOUT)
 	{
-		MessageBox(L"关于");
+		MessageBox(L"YanF制作");
+	}
+	else if (nCmd == IDC_QUIT)
+	{
+		EndDialog(IDOK);
 	}
 }
 
@@ -173,5 +176,12 @@ void CdailycompletionDlg::OnDestroy()
 	_btnMenu.DestroyWindow();
 	_editSearch.DestroyWindow();
 	_taskList->DestroyWindow();
+}
+
+void CdailycompletionDlg::OnSearchKeyChanged()
+{
+	CString strKey;
+	_editSearch.GetWindowText(strKey);
+	GetModel<CTaskModel>()->SearchKey.Set(strKey);
 }
 

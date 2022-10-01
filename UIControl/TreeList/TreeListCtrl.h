@@ -1203,5 +1203,6 @@ namespace ControlUI
 		bool					_bColumnSort;			///< 是否开启列头排序功能
 		bool					_bIsTrim;				///< 是否去掉空格
 		bool					_bCollapseStyle;		///< 树控件折叠展开样式
+		float					_fHightLightFactor;     ///< 高亮色比重
 	};
 }

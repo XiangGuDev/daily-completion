@@ -8,7 +8,7 @@ class ITaskSystem
 {
 public:
 	virtual ~ITaskSystem(){}
-	virtual void AddTask(std::shared_ptr<Task> task) = 0;
+	virtual void AddTask() = 0;
 	virtual void RemoveTask(std::shared_ptr<Task> task) = 0;
 	virtual std::shared_ptr<Task> GetTask(int idx) = 0;
 	virtual int GetTaskCnt() = 0;
@@ -18,7 +18,7 @@ public:
 class CTaskSystem : public BaseSystem, public ITaskSystem
 {
 public:
-	virtual void AddTask(std::shared_ptr<Task> task) override;
+	virtual void AddTask() override;
 	virtual void RemoveTask(std::shared_ptr<Task> task) override;
 	virtual std::shared_ptr<Task> GetTask(int idx) override;
 	virtual int GetTaskCnt() override;

@@ -7,18 +7,23 @@
 #define IDD_DAILYCOMPLETION_DIALOG      1002
 #define IDC_SEARCH                      1003
 #define IDC_MENU_BTN                    1004
-#define IDC_TASKLIST	1005
+#define IDC_TASKLIST                    1005
 #define ID_Menu                         32771
 #define IDC_SETTINGS                    32773
 #define IDC_ABOUT                       32774
 #define IDC_NEW                         32777
 #define IDC_DEL                         32778
+#define ID__32779                       32779
+#define IDC_QUIT                        32780
+#define IDC_COMPLETE                    32781
+#define IDC_REDO                        32782
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         32779
+#define _APS_NEXT_COMMAND_VALUE         32783
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

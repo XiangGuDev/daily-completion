@@ -27,19 +27,35 @@ IListDataSource * CTaskAdapter::GetItem(size_t nIndex, bool & bShowItem, HITEMDA
 	}
 	
 	auto taskSys = GetSystem<CTaskSystem>();
-	for (int i = 0; i < taskSys->GetTaskCnt(); ++i)
-	{
-		auto task = taskSys->GetTask(i);
-		CTaskAdapter *pChildSource = new CTaskAdapter(task, false);
-		return pChildSource;
-	}
-	return NULL;
+	auto task = taskSys->GetTask(nIndex);
+	CTaskAdapter *pChildSource = new CTaskAdapter(task, false);
+	CString strKey = GetModel<CTaskModel>()->SearchKey.Get();
+	bShowItem = task->strName.Find(strKey) > -1;
+	return pChildSource;
 }
 
 void CTaskAdapter::GetCellData(size_t nCol, size_t nRow, const HCOLUMNDATA hColumnData, HCELLINFO hCellData, HEDITCONFIG hEditConfig, CTreeListConfig * pConfig)
 {
 	// 直接复制表头配置
 	hEditConfig->CopyFrom(hColumnData->editConfig);
+
+	CString strField = hEditConfig->field;
+	if (strField == L"序号")
+	{
+		hCellData->textColor = RGB(115, 115, 115);
+	}
+	if (_task && _task->bComplete)
+	{
+		hCellData->backColor = RGB(111, 225, 111);
+	}
+	else if (nRow % 2 == 0)
+	{
+		hCellData->backColor = RGB(225, 225, 225);
+	}
+	else
+	{
+		hCellData->backColor = RGB(200, 200, 200);
+	}
 }
 
 CString CTaskAdapter::GetCellText(size_t nCol, size_t nRow, const HEDITCONFIG hEditConfig, CTreeListConfig * pConfig)
@@ -48,7 +64,7 @@ CString CTaskAdapter::GetCellText(size_t nCol, size_t nRow, const HEDITCONFIG hE
 	CString strField = hEditConfig->field;
 	if (strField == L"序号")
 	{
-		return L"";
+		return CConvert::Int2Text(nRow + 1);
 	}
 	else if (strField == L"任务名称")
 	{

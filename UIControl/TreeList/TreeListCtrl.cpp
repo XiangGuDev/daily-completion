@@ -1828,9 +1828,6 @@ namespace ControlUI
 
 			if (!_headerTheme.IsThemeNull())
 			{
-
-				dcMemory.GradientVert(backgroundArea, _selTopColor, _selBottomColor);
-
 				// 没有网格线时绘制边框,免得背景看起来没边框
 				if (!_hasGrid)
 				{
@@ -1838,10 +1835,6 @@ namespace ControlUI
 					borderBrush.CreateSolidBrush(_selBorderColor);
 					dcMemory.FrameRect(backgroundArea, &borderBrush);
 				}
-			}
-			else
-			{
-				dcMemory.FillSolidRect(backgroundArea, GetSysColor(COLOR_HIGHLIGHT));
 			}
 		}
 		else if (_hHoverRow == hItemData)  // 悬浮行背景
@@ -1851,15 +1844,6 @@ namespace ControlUI
 			// 排除掉网格线一个像素
 			if (_hasGrid)
 				backgroundArea.top += 1;
-
-			if (!_headerTheme.IsThemeNull())
-			{
-				dcMemory.GradientVert(backgroundArea, _hotTopColor, _hotBottomColor);
-			}
-			else
-			{
-				dcMemory.FillSolidRect(backgroundArea, _hotBottomColor);
-			}
 
 			// 没有网格线时绘制边框
 			if (!_hasGrid)
@@ -1942,13 +1926,37 @@ namespace ControlUI
 		}
 
 		// 绘制单元格背景
-		if (!(_hHoverRow == hItemData || hItemData->seleced))
+		if (!IsWindowEnabled())
+			dcMemory.FillSolidRect(backgroundArea, DISABLE_BK_COLOR);
+		else
 		{
-			if (!IsWindowEnabled())
-				dcMemory.FillSolidRect(backgroundArea, DISABLE_BK_COLOR);
-			else
-				dcMemory.FillSolidRect(backgroundArea, hCellInfo->backColor);
+			short topr = GetRValue(hCellInfo->backColor);
+			short topg = GetGValue(hCellInfo->backColor);
+			short topb = GetBValue(hCellInfo->backColor);
+			short bottomR = GetRValue(hCellInfo->backColor);
+			short bottomG = GetGValue(hCellInfo->backColor);
+			short bottomB = GetBValue(hCellInfo->backColor);
+			if (hItemData->seleced)
+			{
+				topr = topr * GetRValue(_selTopColor) / 255;
+				topg = topg * GetGValue(_selTopColor) / 255;
+				topb = topb * GetBValue(_selTopColor) / 255;
+				bottomR = bottomR * GetRValue(_selBottomColor) / 255;
+				bottomG = bottomG * GetGValue(_selBottomColor) / 255;
+				bottomB = bottomB * GetBValue(_selBottomColor) / 255;
+			}
+			else if (_hHoverRow == hItemData)
+			{
+				topr = topr * GetRValue(_hotTopColor) / 255;
+				topg = topg * GetGValue(_hotTopColor) / 255;
+				topb = topb * GetBValue(_hotTopColor) / 255;
+				bottomR = bottomR * GetRValue(_hotBottomColor) / 255;
+				bottomG = bottomG * GetGValue(_hotBottomColor) / 255;
+				bottomB = bottomB * GetBValue(_hotBottomColor) / 255;
+			}
+			dcMemory.GradientVert(backgroundArea, RGB(topr, topg, topb), RGB(bottomR, bottomG, bottomB));
 		}
+			
 
 		// 当前是树节点， 如果不是计算文本区域
 		if (bTreeNode)

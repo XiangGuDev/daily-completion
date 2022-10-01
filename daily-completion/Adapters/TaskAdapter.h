@@ -83,6 +83,8 @@ namespace ControlUI
 		*/
 		virtual bool SetCellText(size_t nCol, size_t nRow, const HEDITCONFIG hEditConfig,
 			const CString& strNewValue, CTreeListConfig* pConfig);
+
+		std::shared_ptr<Task> GetTask() { return _task; }
 	private:
 		bool _bRoot; // 是否是根节点
 		std::shared_ptr<Task> _task;
