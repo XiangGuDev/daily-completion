@@ -4,15 +4,23 @@
 
 CTaskSaveUtility::CTaskSaveUtility()
 {
+
 	// ¶ÁÈ¡ÎÄ¼þ
 	SYSTEMTIME st;
 	CString filename = L"";
 	GetLocalTime(&st);
-	filename.Format(L"%04d-%02d-%02d", st.wYear, st.wMonth, st.wDay);
-	_strDataPath = CPathConfig::GetAppStartPath() + L"Output/" + filename + L".xml";
+	filename.Format(L"TaskData_%04d-%02d-%02d", st.wYear, st.wMonth, st.wDay);
+	_strDataPath = CPathConfig::GetAppStartPath() + L"Data/" + filename + L".xml";
+	_strFixedPath = CPathConfig::GetAppStartPath() + L"Data/FixedTask.xml";
+
+	_bDataEmpty = false;
 	if (CFileTool::FileExist(_strDataPath) && !_doc.LoadFile(_strDataPath, fmtXMLUTF8))
 	{
-		ASSERT(FALSE);
+		_bDataEmpty = true;
+		return;
+	}
+	if (CFileTool::FileExist(_strDataPath) && !_docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
+	{
 		return;
 	}
 }
@@ -27,10 +35,13 @@ void CTaskSaveUtility::SaveData(const std::vector<std::shared_ptr<Task>>& inVec)
 	{
 		auto task = inVec[i];
 		auto elem = elems->InsertAt(i);
+		elem->SetElementName(L"Task");
 		elem->SetAttrValue(L"name", task->strName);
+		elem->SetAttrValue(L"fixed", CConvert::Bool2Text(task->bFixed));
 		elem->SetAttrValue(L"complete", CConvert::Bool2Text(task->bComplete));
 	}
 	_doc.SaveFile(_strDataPath, fmtXMLUTF8);
+	SaveFixed(inVec);
 }
 
 void CTaskSaveUtility::LoadData(std::vector<std::shared_ptr<Task>>& outVec)
@@ -43,6 +54,49 @@ void CTaskSaveUtility::LoadData(std::vector<std::shared_ptr<Task>>& outVec)
 		auto elem = elems->GetAt(i);
 		auto task = std::make_shared<Task>();
 		task->strName = elem->GetAttrValue(L"name");
+		task->bComplete = CConvert::Text2Bool(elem->GetAttrValue(L"complete"));
+		task->bFixed = CConvert::Text2Bool(elem->GetAttrValue(L"fixed"));
+		outVec.push_back(task);
+	}
+	if (_bDataEmpty)
+	{
+		LoadFixed(outVec);
+	}
+}
+
+void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec)
+{
+	_docFixed.Clear();
+	auto pRoot = _docFixed.GetElementRoot();
+	if (pRoot == NULL)return;
+	auto elems = pRoot->GetChildElements();
+	if (inVec.empty()) return;
+	int idx = 0;
+	for (int i = 0; i < inVec.size(); ++i)
+	{
+		auto task = inVec[i];
+		if (!task->bFixed)continue;
+		auto elem = elems->InsertAt(idx++);
+		elem->SetElementName(L"FixedTask");
+		elem->SetAttrValue(L"name", task->strName);
+		elem->SetAttrValue(L"fixed", CConvert::Bool2Text(task->bFixed));
+		elem->SetAttrValue(L"complete", CConvert::Bool2Text(task->bComplete));
+	}
+	if (pRoot->GetChildElementCount() == 0)return;
+	_docFixed.SaveFile(_strFixedPath, fmtXMLUTF8);
+}
+
+void CTaskSaveUtility::LoadFixed(std::vector<std::shared_ptr<Task>> &outVec)
+{
+	auto pRoot = _docFixed.GetElementRoot();
+	if (pRoot == NULL)return;
+	auto elems = pRoot->GetChildElements();
+	for (int i = 0; i < elems->GetCount(); ++i)
+	{
+		auto elem = elems->GetAt(i);
+		auto task = std::make_shared<Task>();
+		task->strName = elem->GetAttrValue(L"name");
+		task->bFixed = CConvert::Text2Bool(elem->GetAttrValue(L"fixed"));
 		task->bComplete = CConvert::Text2Bool(elem->GetAttrValue(L"complete"));
 		outVec.push_back(task);
 	}

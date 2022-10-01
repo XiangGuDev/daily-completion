@@ -19,8 +19,6 @@ namespace CommBase
 
 			// È¥µô³ÌÐòÃû
 			TCHAR *pSlash = _tcsrchr(AppPath, _T('\\'));
-			*pSlash = _T('\0');
-			pSlash = _tcsrchr(AppPath, _T('\\'));
 			pSlash++;
 			*pSlash = _T('\0');
 			strAppPath = AppPath;

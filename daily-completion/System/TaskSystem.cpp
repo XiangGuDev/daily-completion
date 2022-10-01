@@ -13,6 +13,8 @@ void CTaskSystem::AddTask()
 {
 	auto task = std::make_shared<Task>();
 	task->strName = L"新任务(双击重命名)";
+	task->bComplete = false;
+	task->bFixed = false;
 	_taskList.push_back(task);
 	SendEvent<UpdateGridEvent>();
 	Save();
@@ -26,10 +28,10 @@ void CTaskSystem::RemoveTask(std::shared_ptr<Task> task)
 		{
 			_taskList.erase(iter);
 			SendEvent<UpdateGridEvent>();
+			Save();
 			return;
 		}
 	}
-	Save();
 }
 
 std::shared_ptr<Task> CTaskSystem::GetTask(int idx)

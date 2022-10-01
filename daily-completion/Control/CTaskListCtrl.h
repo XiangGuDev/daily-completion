@@ -12,8 +12,13 @@ public:
 	void OnUpdateGrid(std::shared_ptr<UpdateGridEvent> e);
 	void OnSearchKeyChanged(const CString &strOld, const CString &strNew);
 	afx_msg void OnDestroy();
+	void LoadIcon(const std::vector<CString> &pathList);
 private:
 	std::function<void(const CString &, const CString &)> _OnSearchKeyChanged;
 	std::function<void(std::shared_ptr<UpdateGridEvent> e)> _OnUpdateGrid;
+private:
+	CImageList _imageList; // Õº±Í¡–±Ì
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 

@@ -70,7 +70,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_taskList = std::make_shared<CTaskListCtrl>();
 		_taskList->Create(rcTree, this, IDC_TASKLIST);
 		CString strAppPath = CPathConfig::GetAppStartPath();
-		strAppPath.Append(L"/Output/界面配置.xml");
+		strAppPath.Append(L"Config/界面配置.xml");
 		if (!_taskList->LoadConfig(strAppPath, L"任务列表"))
 		{
 			::MessageBox(::GetActiveWindow(), L"配置文件读取失败！", L"提示", MB_OK);
@@ -79,6 +79,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_taskList->ShowHeader(false);
 		_taskList->SetHasGrid(false);
 		_taskList->SetAutoColumnWidth();
+		_taskList->LoadIcon({ CPathConfig::GetAppStartPath()+L"Config/Fixed.ico" });
 		_taskList->OnUpdateGrid(std::make_shared<UpdateGridEvent>());
 	}
 

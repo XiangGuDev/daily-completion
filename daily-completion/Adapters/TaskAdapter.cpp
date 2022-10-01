@@ -47,6 +47,10 @@ void CTaskAdapter::GetCellData(size_t nCol, size_t nRow, const HCOLUMNDATA hColu
 	hEditConfig->CopyFrom(hColumnData->editConfig);
 
 	CString strField = hEditConfig->field;
+	if (strField == L"ÊÇ·ñ¹Ì¶¨")
+	{
+		hEditConfig->image = _task->bFixed ? 0 : -1;
+	}
 	if (strField == L"ÐòºÅ")
 	{
 		hCellData->textColor = RGB(115, 115, 115);
