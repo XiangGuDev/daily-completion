@@ -4,6 +4,8 @@
 #include "../System/TaskSystem.h"
 #include "../Model/Task.h"
 #include "../Adapters/TaskAdapter.h"
+#include "../Model/GlobalModel.h"
+#include "../Model/UpdateGridEvent.h"
 
 using namespace ControlUI;
 
@@ -18,14 +20,14 @@ CTaskListCtrl::CTaskListCtrl()
 	_OnSearchKeyChanged = std::bind(&CTaskListCtrl::OnSearchKeyChanged, this, std::placeholders::_1, std::placeholders::_2);
 	_OnUpdateGrid = std::bind(&CTaskListCtrl::OnUpdateGrid, this, std::placeholders::_1);
 	RegisterEvent<UpdateGridEvent>(_OnUpdateGrid);
-	GetModel<CTaskModel>()->SearchKey.RegisterChangedEvent(_OnSearchKeyChanged);
+	GetModel<CGlobalModel>()->SearchKey.RegisterChangedEvent(_OnSearchKeyChanged);
 }
 
 void CTaskListCtrl::OnDestroy()
 {
 	__super::OnDestroy();
 	UnRegisterEvent<UpdateGridEvent>(_OnUpdateGrid);
-	GetModel<CTaskModel>()->SearchKey.UnRegisterChangedEvent(_OnSearchKeyChanged);
+	GetModel<CGlobalModel>()->SearchKey.UnRegisterChangedEvent(_OnSearchKeyChanged);
 }
 
 void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)

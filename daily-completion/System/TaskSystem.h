@@ -13,6 +13,7 @@ public:
 	virtual std::shared_ptr<Task> GetTask(int idx) = 0;
 	virtual int GetTaskCnt() = 0;
 	virtual bool IsEmpty() = 0;
+	virtual void Save() = 0;
 };
 
 class CTaskSystem : public BaseSystem, public ITaskSystem
@@ -23,6 +24,7 @@ public:
 	virtual std::shared_ptr<Task> GetTask(int idx) override;
 	virtual int GetTaskCnt() override;
 	virtual bool IsEmpty() override;
+	virtual void Save() override;
 protected:
 	virtual void Init() override;
 private:

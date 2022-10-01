@@ -7,6 +7,7 @@ class CTaskListCtrl : public ControlUI::CTreeListCtrl, public DCController
 public:
 	CTaskListCtrl();
 	DECLARE_MESSAGE_MAP()
+public:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	void OnUpdateGrid(std::shared_ptr<UpdateGridEvent> e);
 	void OnSearchKeyChanged(const CString &strOld, const CString &strNew);

@@ -7,16 +7,11 @@
 #include "YFramework/Singleton/BaseSingleton.h"
 #include "../Base/DCController.h"
 
-namespace ControlUI
-{
-	class CListCtrlDataSource;
-}
 class CTaskListCtrl;
-class CSettingsDlg;
-class CdailycompletionDlg : public CDialogEx, public DCController
+class CSettingsDlg : public CDialogEx, public DCController
 {
 public:
-	CdailycompletionDlg(CWnd* pParent = nullptr);	// 标准构造函数
+	CSettingsDlg(CWnd* pParent = nullptr);	// 标准构造函数
 	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DAILYCOMPLETION_DIALOG };
@@ -32,14 +27,8 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnClickMenu();
 	afx_msg void OnDestroy();
-	afx_msg void OnSearchKeyChanged();
-private:
-	CBCGPButton _btnMenu; // 菜单
-	CBCGPEdit _editSearch; // 搜索
-	std::shared_ptr<CTaskListCtrl> _taskList; // 任务列表
-	std::shared_ptr< CSettingsDlg> _settingsDlg; // 设置窗口
+	afx_msg void OnClickAutoStart();
 };
 
 

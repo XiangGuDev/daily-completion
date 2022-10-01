@@ -14,11 +14,8 @@ namespace ControlUI
 		*  @param    _bFindMode 是否为查找模式
 		*  @return
 		*/
-		CTaskAdapter(std::shared_ptr<Task> task, bool bRoot = true)
-		{
-			_bRoot = bRoot;
-			_task = task;
-		}
+		CTaskAdapter(std::shared_ptr<Task> task, bool bRoot = true);
+		
 	public:
 
 		/**

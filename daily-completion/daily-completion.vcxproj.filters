@@ -33,12 +33,6 @@
     <ClInclude Include="App\PointApp.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Storage\PlayerPrefsStorage.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Storage\IBaseStorage.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Dlg\daily-completionDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -57,6 +51,21 @@
     <ClInclude Include="Control\CTaskListCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\AutoStartUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Dlg\SettingsDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\TaskSaveUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\UpdateGridEvent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GlobalModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="daily-completion.cpp">
@@ -66,9 +75,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="App\PointApp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Storage\PlayerPrefsStorage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Dlg\daily-completionDlg.cpp">
@@ -81,6 +87,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Control\CTaskListCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\AutoStartUtility.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Dlg\SettingsDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\TaskSaveUtility.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

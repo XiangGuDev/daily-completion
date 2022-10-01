@@ -11,6 +11,9 @@
 #include "../Model/Task.h"
 #include "../Adapters/TaskAdapter.h"
 #include "../Control/CTaskListCtrl.h"
+#include "SettingsDlg.h"
+#include "../Model/GlobalModel.h"
+#include "../Model/UpdateGridEvent.h"
 
 using namespace YFramework;
 using namespace ControlUI;
@@ -49,6 +52,8 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+	_settingsDlg = std::make_shared<CSettingsDlg>();
+
 	static CFont font;
 	font.DeleteObject();
 	font.CreatePointFont(135, _T("微软雅黑"));
@@ -74,6 +79,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_taskList->ShowHeader(false);
 		_taskList->SetHasGrid(false);
 		_taskList->SetAutoColumnWidth();
+		_taskList->OnUpdateGrid(std::make_shared<UpdateGridEvent>());
 	}
 
 	// 搜索
@@ -158,7 +164,7 @@ void CdailycompletionDlg::OnClickMenu()
 		curPt.x, curPt.y, this);
 	if (nCmd == IDC_SETTINGS)
 	{
-		MessageBox(L"设置");
+		_settingsDlg->DoModal();
 	}
 	else if (nCmd == IDC_ABOUT)
 	{
@@ -182,6 +188,6 @@ void CdailycompletionDlg::OnSearchKeyChanged()
 {
 	CString strKey;
 	_editSearch.GetWindowText(strKey);
-	GetModel<CTaskModel>()->SearchKey.Set(strKey);
+	GetModel<CGlobalModel>()->SearchKey.Set(strKey);
 }
 

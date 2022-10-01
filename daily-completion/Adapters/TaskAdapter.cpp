@@ -1,9 +1,16 @@
 #include "pch.h"
-#include "TaskAdapter.h"
 #include "../System/TaskSystem.h"
 #include "../Model/Task.h"
+#include "TaskAdapter.h"
+#include "../Model/GlobalModel.h"
 
 using namespace ControlUI;
+
+CTaskAdapter::CTaskAdapter(std::shared_ptr<Task> task, bool bRoot)
+{
+	_bRoot = bRoot;
+	_task = task;
+}
 
 size_t CTaskAdapter::GetCount(CTreeListConfig * pConfig)
 {
@@ -29,7 +36,7 @@ IListDataSource * CTaskAdapter::GetItem(size_t nIndex, bool & bShowItem, HITEMDA
 	auto taskSys = GetSystem<CTaskSystem>();
 	auto task = taskSys->GetTask(nIndex);
 	CTaskAdapter *pChildSource = new CTaskAdapter(task, false);
-	CString strKey = GetModel<CTaskModel>()->SearchKey.Get();
+	CString strKey = GetModel<CGlobalModel>()->SearchKey.Get();
 	bShowItem = task->strName.Find(strKey) > -1;
 	return pChildSource;
 }
