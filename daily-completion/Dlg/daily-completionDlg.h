@@ -6,6 +6,7 @@
 #include "YFramework/BindableProperty/BindableProperty.h"
 #include "YFramework/Singleton/BaseSingleton.h"
 #include "../Base/DCController.h"
+#include "../Base/BaseTaskDlg.h"
 
 namespace ControlUI
 {
@@ -13,7 +14,7 @@ namespace ControlUI
 }
 class CTaskListCtrl;
 class CSettingsDlg;
-class CdailycompletionDlg : public CDialogEx, public DCController
+class CdailycompletionDlg : public CBaseTaskDlg, public DCController
 {
 public:
 	CdailycompletionDlg(CWnd* pParent = nullptr);	// 标准构造函数

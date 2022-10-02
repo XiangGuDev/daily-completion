@@ -4,7 +4,6 @@
 
 CTaskSaveUtility::CTaskSaveUtility()
 {
-
 	// ¶ÁÈ¡ÎÄ¼þ
 	SYSTEMTIME st;
 	CString filename = L"";
@@ -13,15 +12,14 @@ CTaskSaveUtility::CTaskSaveUtility()
 	_strDataPath = CPathConfig::GetAppStartPath() + L"Data/" + filename + L".xml";
 	_strFixedPath = CPathConfig::GetAppStartPath() + L"Data/FixedTask.xml";
 
-	_bDataEmpty = false;
-	if (CFileTool::FileExist(_strDataPath) && !_doc.LoadFile(_strDataPath, fmtXMLUTF8))
+	_bDataEmpty = !CFileTool::FileExist(_strDataPath);
+	if (!_doc.LoadFile(_strDataPath, fmtXMLUTF8))
 	{
-		_bDataEmpty = true;
-		return;
+		OutputDebugString(L"_doc load failed");
 	}
-	if (CFileTool::FileExist(_strDataPath) && !_docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
+	if (!_docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
 	{
-		return;
+		OutputDebugString(L"_docFixed load failed");
 	}
 }
 

@@ -66,6 +66,9 @@
     <ClInclude Include="Model\GlobalModel.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Base\BaseTaskDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="daily-completion.cpp">
@@ -96,6 +99,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Utility\TaskSaveUtility.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\BaseTaskDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

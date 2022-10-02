@@ -201,6 +201,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Adapters\TaskAdapter.h" />
+    <ClInclude Include="Base\BaseTaskDlg.h" />
     <ClInclude Include="Base\DCController.h" />
     <ClInclude Include="Control\CTaskListCtrl.h" />
     <ClInclude Include="Dlg\SettingsDlg.h" />
@@ -220,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adapters\TaskAdapter.cpp" />
+    <ClCompile Include="Base\BaseTaskDlg.cpp" />
     <ClCompile Include="Control\CTaskListCtrl.cpp" />
     <ClCompile Include="Dlg\SettingsDlg.cpp" />
     <ClCompile Include="Utility\AutoStartUtility.cpp" />

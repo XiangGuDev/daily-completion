@@ -22,18 +22,7 @@ using namespace ControlUI;
 #define new DEBUG_NEW
 #endif
 
-CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_DAILYCOMPLETION_DIALOG, pParent)
-{
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-}
-
-void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CdailycompletionDlg, CBaseTaskDlg)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDC_MENU_BTN, &CdailycompletionDlg::OnClickMenu)
 	ON_EN_CHANGE(IDC_SEARCH, &CdailycompletionDlg::OnSearchKeyChanged)
@@ -41,11 +30,21 @@ BEGIN_MESSAGE_MAP(CdailycompletionDlg, CDialogEx)
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
+CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
+	: CBaseTaskDlg(IDD_DAILYCOMPLETION_DIALOG, pParent)
+{
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+}
+
+void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CBaseTaskDlg::DoDataExchange(pDX);
+}
 
 // CdailycompletionDlg 消息处理程序
 BOOL CdailycompletionDlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CBaseTaskDlg::OnInitDialog();
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
@@ -60,6 +59,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 
 
 	int menuLen = 10; // 菜单边长
+	
 	// 任务列表
 	{
 		CRect rcTree;
@@ -82,7 +82,6 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_taskList->LoadIcon({ CPathConfig::GetAppStartPath()+L"Config/Fixed.ico" });
 		_taskList->OnUpdateGrid(std::make_shared<UpdateGridEvent>());
 	}
-
 	// 搜索
 	{
 		CRect rcSc;
@@ -109,7 +108,10 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_btnMenu.SetFont(&font);//设置字体
 	}
 
-	// TODO: 在此添加额外的初始化代码
+	CenterWindow();
+	Hide2Taskbar();
+	Hide2Taskbar(false);
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -138,7 +140,7 @@ void CdailycompletionDlg::OnPaint()
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		CBaseTaskDlg::OnPaint();
 	}
 }
 
@@ -179,7 +181,7 @@ void CdailycompletionDlg::OnClickMenu()
 
 void CdailycompletionDlg::OnDestroy()
 {
-	CDialogEx::OnDestroy();
+	CBaseTaskDlg::OnDestroy();
 	_btnMenu.DestroyWindow();
 	_editSearch.DestroyWindow();
 	_taskList->DestroyWindow();
