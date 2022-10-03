@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CdailycompletionDlg, CBaseTaskDlg)
 	ON_EN_CHANGE(IDC_SEARCH, &CdailycompletionDlg::OnSearchKeyChanged)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
+	ON_WM_HOTKEY()
 END_MESSAGE_MAP()
 
 CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
@@ -108,11 +109,22 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_btnMenu.SetFont(&font);//设置字体
 	}
 
+	RegisterHotKey(m_hWnd, 1001, MOD_CONTROL | MOD_SHIFT, 'A');
+
 	CenterWindow();
 	Hide2Taskbar();
-	Hide2Taskbar(false);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+}
+
+void CdailycompletionDlg::OnDestroy()
+{
+	CBaseTaskDlg::OnDestroy();
+	_btnMenu.DestroyWindow();
+	_editSearch.DestroyWindow();
+	_taskList->DestroyWindow();
+
+	UnregisterHotKey(m_hWnd, 1001);
 }
 
 // 如果向对话框添加最小化按钮，则需要下面的代码
@@ -179,13 +191,6 @@ void CdailycompletionDlg::OnClickMenu()
 	}
 }
 
-void CdailycompletionDlg::OnDestroy()
-{
-	CBaseTaskDlg::OnDestroy();
-	_btnMenu.DestroyWindow();
-	_editSearch.DestroyWindow();
-	_taskList->DestroyWindow();
-}
 
 void CdailycompletionDlg::OnSearchKeyChanged()
 {
@@ -194,3 +199,18 @@ void CdailycompletionDlg::OnSearchKeyChanged()
 	GetModel<CGlobalModel>()->SearchKey.Set(strKey);
 }
 
+
+
+void CdailycompletionDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (nHotKeyId == 1001)
+	{
+		Hide2Taskbar(false);
+		CRect rtClient;
+		GetWindowRect(rtClient);
+		::SetWindowPos(m_hWnd, HWND_TOPMOST, rtClient.left, rtClient.top, rtClient.Width(), rtClient.Height(), SWP_SHOWWINDOW);
+	}
+
+	__super::OnHotKey(nHotKeyId, nKey1, nKey2);
+}

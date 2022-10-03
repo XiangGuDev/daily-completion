@@ -22,11 +22,12 @@ void CBaseTaskDlg::Hide2Taskbar(bool bHide)
 	}
 	else if(!bHide && _bHideWnd)
 	{
+		ShowWindow(SW_HIDE);
+		AfxGetMainWnd()->MoveWindow(TmpRect.left, TmpRect.top, TmpRect.Width(), TmpRect.Height(), true);
 		::Shell_NotifyIcon(NIM_DELETE, &m_nid);
 		ModifyStyleEx(WS_EX_TOOLWINDOW, WS_EX_APPWINDOW);
 		AfxGetApp()->GetMainWnd()->ShowWindow(SW_SHOW);
 		ShowWindow(SW_SHOW);
-		AfxGetMainWnd()->MoveWindow(TmpRect.left, TmpRect.top, TmpRect.Width(), TmpRect.Height(), true);
 		_bHideWnd = false;
 	}
 }
@@ -99,7 +100,6 @@ void CBaseTaskDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 	Hide2Taskbar(false);
 }
-
 
 BOOL CBaseTaskDlg::OnInitDialog()
 {
