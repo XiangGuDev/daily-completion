@@ -36,13 +36,13 @@ public:
 	afx_msg void OnClickMenu();
 	afx_msg void OnDestroy();
 	afx_msg void OnSearchKeyChanged();
+	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 private:
 	CBCGPButton _btnMenu; // 菜单
 	CBCGPEdit _editSearch; // 搜索
 	std::shared_ptr<CTaskListCtrl> _taskList; // 任务列表
 	std::shared_ptr< CSettingsDlg> _settingsDlg; // 设置窗口
-public:
-	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 };
 
 

@@ -6,41 +6,52 @@
 BEGIN_MESSAGE_MAP(CBaseTaskDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_MESSAGE(WM_SHOWTASK, onShowTask)
+	ON_MESSAGE(WM_HIDETOTASKBAR, OnHideToTaskbar)
+	ON_MESSAGE(WM_SHOWFROMTASKBAR, OnShowFromTaskbar)
 END_MESSAGE_MAP()
 
-void CBaseTaskDlg::Hide2Taskbar(bool bHide)
+void CBaseTaskDlg::HideToTaskbar()
 {
-	static CRect TmpRect;
-	if (bHide && !_bHideWnd)
-	{
-		GetWindowRect(&TmpRect);
-		ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
-		AfxGetApp()->GetMainWnd()->ShowWindow(SW_HIDE);
-		ShowWindow(SW_HIDE);
-		AfxGetMainWnd()->MoveWindow(-TmpRect.right, -TmpRect.bottom, TmpRect.Width(), TmpRect.Height(), true);
-		_bHideWnd = true;
-	}
-	else if(!bHide && _bHideWnd)
-	{
-		ShowWindow(SW_HIDE);
-		AfxGetMainWnd()->MoveWindow(TmpRect.left, TmpRect.top, TmpRect.Width(), TmpRect.Height(), true);
-		::Shell_NotifyIcon(NIM_DELETE, &m_nid);
-		ModifyStyleEx(WS_EX_TOOLWINDOW, WS_EX_APPWINDOW);
-		AfxGetApp()->GetMainWnd()->ShowWindow(SW_SHOW);
-		ShowWindow(SW_SHOW);
-		_bHideWnd = false;
-	}
+	PostMessage(WM_HIDETOTASKBAR, 0, 0);
+}
+
+void CBaseTaskDlg::ShowFromTaskbar()
+{
+	PostMessage(WM_SHOWFROMTASKBAR, 0, 0);
+}
+
+LRESULT CBaseTaskDlg::OnHideToTaskbar(WPARAM wParam, LPARAM lParam)
+{
+	if (!_bVisible) return 0;
+	_bVisible = false;
+	ToTray();
+	GetWindowRect(&_tmpRect);
+	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
+	AfxGetApp()->GetMainWnd()->ShowWindow(SW_HIDE);
+	AfxGetMainWnd()->MoveWindow(-_tmpRect.right, -_tmpRect.bottom, _tmpRect.Width(), _tmpRect.Height(), true);
+	ShowWindow(SW_HIDE);
+	return 0;
+}
+
+LRESULT CBaseTaskDlg::OnShowFromTaskbar(WPARAM wParam, LPARAM lParam)
+{
+	if (_bVisible)return 0;
+	_bVisible = true;
+	AfxGetMainWnd()->MoveWindow(_tmpRect.left, _tmpRect.top, _tmpRect.Width(), _tmpRect.Height(), true);
+	::Shell_NotifyIcon(NIM_DELETE, &m_nid);
+	ModifyStyleEx(WS_EX_TOOLWINDOW, WS_EX_APPWINDOW);
+	AfxGetApp()->GetMainWnd()->ShowWindow(SW_SHOW);
+	ShowWindow(SW_SHOW);
+	return 0;
 }
 
 void CBaseTaskDlg::SetTaskbarTip(const CString & strTip)
 {
 	_strTaskbarTip = strTip;
-	ToTray();
 }
 
 void CBaseTaskDlg::ToTray()
 {
-	::Shell_NotifyIcon(NIM_DELETE, &m_nid);
 	m_nid.cbSize = (DWORD)sizeof(NOTIFYICONDATA);
 	m_nid.hWnd = this->m_hWnd;
 	m_nid.uID = IDR_MAINFRAME;
@@ -77,7 +88,7 @@ LRESULT CBaseTaskDlg::onShowTask(WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_LBUTTONDBLCLK://双击左键的处理
 	{
-		Hide2Taskbar(false);
+		ShowFromTaskbar();
 	}
 	break;
 	}
@@ -87,7 +98,6 @@ LRESULT CBaseTaskDlg::onShowTask(WPARAM wParam, LPARAM lParam)
 CBaseTaskDlg::CBaseTaskDlg(UINT nIDTemplate, CWnd * pParent)
 	: CDialogEx(nIDTemplate, pParent)
 {
-	_bHideWnd = false;
 }
 
 void CBaseTaskDlg::DoDataExchange(CDataExchange* pDX)
@@ -98,7 +108,7 @@ void CBaseTaskDlg::DoDataExchange(CDataExchange* pDX)
 void CBaseTaskDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
-	Hide2Taskbar(false);
+	ShowFromTaskbar();
 }
 
 BOOL CBaseTaskDlg::OnInitDialog()
@@ -115,7 +125,7 @@ BOOL CBaseTaskDlg::OnInitDialog()
 	*end = _T('\0');
 	filename = beg;
 	SetTaskbarTip(filename);
-
+	_bVisible = true;
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
