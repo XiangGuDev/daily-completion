@@ -8,6 +8,7 @@
 #include "SettingsDlg.h"
 #include "afxdialogex.h"
 #include "../Utility/AutoStartUtility.h"
+#include "../System/TaskSystem.h"
 
 using namespace YFramework;
 using namespace ControlUI;
@@ -25,13 +26,16 @@ CSettingsDlg::CSettingsDlg(CWnd* pParent /*=nullptr*/)
 void CSettingsDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_DATE, _dateCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CSettingsDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDC_AUTOSTART, &CSettingsDlg::OnClickAutoStart)
+	ON_BN_CLICKED(IDC_CHANGE, &CSettingsDlg::OnClickChange)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
+	ON_NOTIFY(DTN_DATETIMECHANGE, IDC_DATE, &CSettingsDlg::OnDtnDatetimechangeDate)
 END_MESSAGE_MAP()
 
 
@@ -44,6 +48,9 @@ BOOL CSettingsDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
+
+	auto date = GetSystem<CTaskSystem>()->GetDate();
+	_dateCtrl.SetTime(date);
 
 	// TODO: 在此添加额外的初始化代码
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -93,4 +100,22 @@ void CSettingsDlg::OnDestroy()
 void CSettingsDlg::OnClickAutoStart()
 {
 	AutoStartUtility::SetAutoStart(true);
+}
+
+void CSettingsDlg::OnClickChange()
+{
+	COleDateTime time;
+	_dateCtrl.GetTime(time);
+	GetSystem<CTaskSystem>()->SetDate(time.GetYear(), time.GetMonth(), time.GetDay());
+}
+
+
+void CSettingsDlg::OnDtnDatetimechangeDate(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	// 不要在此处下断点，易卡死
+	COleDateTime time;
+	_dateCtrl.GetTime(time);
+	GetSystem<CTaskSystem>()->SetDate(time.GetYear(), time.GetMonth(), time.GetDay());
+
+	*pResult = 0;
 }

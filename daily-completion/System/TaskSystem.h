@@ -4,30 +4,21 @@
 using namespace YFramework;
 
 struct Task;
-class ITaskSystem
+class CTaskSystem : public BaseSystem
 {
 public:
-	virtual ~ITaskSystem(){}
-	virtual void AddTask() = 0;
-	virtual void RemoveTask(std::shared_ptr<Task> task) = 0;
-	virtual std::shared_ptr<Task> GetTask(int idx) = 0;
-	virtual int GetTaskCnt() = 0;
-	virtual bool IsEmpty() = 0;
-	virtual void Save() = 0;
-};
-
-class CTaskSystem : public BaseSystem, public ITaskSystem
-{
-public:
-	virtual void AddTask() override;
-	virtual void RemoveTask(std::shared_ptr<Task> task) override;
-	virtual std::shared_ptr<Task> GetTask(int idx) override;
-	virtual int GetTaskCnt() override;
-	virtual bool IsEmpty() override;
-	virtual void Save() override;
+	void AddTask() ;
+	void RemoveTask(std::shared_ptr<Task> task) ;
+	std::shared_ptr<Task> GetTask(int idx) ;
+	int GetTaskCnt() ;
+	bool IsEmpty() ;
+	void Save() ;
+	void SetDate(int y, int m, int d);
+	const COleDateTime &GetDate() { return _time; }
 protected:
-	virtual void Init() override;
+	virtual void Init() ;
 private:
 	std::vector<std::shared_ptr<Task>> _taskList;
+	COleDateTime _time;
 };
 

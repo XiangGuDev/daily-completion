@@ -9,7 +9,9 @@
 #define IDC_SEARCH                      1003
 #define IDC_AUTOSTART                   1003
 #define IDC_MENU_BTN                    1004
+#define IDC_DATE                        1004
 #define IDC_TASKLIST                    1005
+#define IDC_CHANGE                      1005
 #define ID_Menu                         32771
 #define IDC_SETTINGS                    32773
 #define IDC_ABOUT                       32774
@@ -29,7 +31,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32786
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1006
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -11,16 +11,6 @@ CTaskSaveUtility::CTaskSaveUtility()
 	filename.Format(L"TaskData_%04d-%02d-%02d", st.wYear, st.wMonth, st.wDay);
 	_strDataPath = CPathConfig::GetAppStartPath() + L"Data/" + filename + L".xml";
 	_strFixedPath = CPathConfig::GetAppStartPath() + L"Data/FixedTask.xml";
-
-	_bDataEmpty = !CFileTool::FileExist(_strDataPath);
-	if (!_doc.LoadFile(_strDataPath, fmtXMLUTF8))
-	{
-		OutputDebugString(L"_doc load failed");
-	}
-	if (!_docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
-	{
-		OutputDebugString(L"_docFixed load failed");
-	}
 }
 
 void CTaskSaveUtility::SaveData(const std::vector<std::shared_ptr<Task>>& inVec)
@@ -44,6 +34,14 @@ void CTaskSaveUtility::SaveData(const std::vector<std::shared_ptr<Task>>& inVec)
 
 void CTaskSaveUtility::LoadData(std::vector<std::shared_ptr<Task>>& outVec)
 {
+	outVec.clear();
+	_doc.Clear();
+	_bDataEmpty = !CFileTool::FileExist(_strDataPath);
+	if (!_doc.LoadFile(_strDataPath, fmtXMLUTF8))
+	{
+		OutputDebugString(L"_doc load failed");
+		return;
+	}
 	auto pRoot = _doc.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();
@@ -55,10 +53,6 @@ void CTaskSaveUtility::LoadData(std::vector<std::shared_ptr<Task>>& outVec)
 		task->bComplete = CConvert::Text2Bool(elem->GetAttrValue(L"complete"));
 		task->bFixed = CConvert::Text2Bool(elem->GetAttrValue(L"fixed"));
 		outVec.push_back(task);
-	}
-	if (_bDataEmpty)
-	{
-		LoadFixed(outVec);
 	}
 }
 
@@ -84,8 +78,23 @@ void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec
 	_docFixed.SaveFile(_strFixedPath, fmtXMLUTF8);
 }
 
+void CTaskSaveUtility::SetDate(int y, int m, int d)
+{
+	CString filename = L"";
+	filename.Format(L"TaskData_%04d-%02d-%02d", y, m, d);
+	_strDataPath = CPathConfig::GetAppStartPath() + L"Data/" + filename + L".xml";
+}
+
 void CTaskSaveUtility::LoadFixed(std::vector<std::shared_ptr<Task>> &outVec)
 {
+	outVec.clear();
+	_docFixed.Clear();
+	if (!_docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
+	{
+		OutputDebugString(L"_docFixed load failed");
+		return;
+	}
+
 	auto pRoot = _docFixed.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();

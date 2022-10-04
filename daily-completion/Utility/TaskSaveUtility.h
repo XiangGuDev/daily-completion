@@ -7,9 +7,10 @@ public:
 	CTaskSaveUtility();
 	void SaveData(const std::vector<std::shared_ptr<Task>> &inVec);
 	void LoadData(std::vector<std::shared_ptr<Task>> &outVec);
-protected:
-	void SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec);
 	void LoadFixed(std::vector<std::shared_ptr<Task>> &outVec);
+	void SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec);
+	bool IsDataEmpty() { return _bDataEmpty; }
+	void SetDate(int y, int m, int d);
 private:
 	CXmlDocument _doc;
 	CXmlDocument _docFixed;

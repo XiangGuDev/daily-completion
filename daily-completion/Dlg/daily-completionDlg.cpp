@@ -36,6 +36,7 @@ CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
 	: CBaseTaskDlg(IDD_DAILYCOMPLETION_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	_bDontHide = false;
 }
 
 void CdailycompletionDlg::DoDataExchange(CDataExchange* pDX)
@@ -53,7 +54,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	_settingsDlg = std::make_shared<CSettingsDlg>();
+	_settingsDlg = std::make_shared<CSettingsDlg>(this);
 
 	static CFont font;
 	font.DeleteObject();
@@ -109,6 +110,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_btnMenu.ShowWindow(SW_SHOW);
 		_btnMenu.SetFont(&font);//设置字体
 	}
+	// 日期
 
 	RegisterHotKey(m_hWnd, 1001, MOD_CONTROL | MOD_SHIFT, 'A');
 	CenterWindow();
@@ -178,7 +180,9 @@ void CdailycompletionDlg::OnClickMenu()
 		curPt.x, curPt.y, this);
 	if (nCmd == IDC_SETTINGS)
 	{
+		_bDontHide = true;
 		_settingsDlg->DoModal();
+		_bDontHide = false;
 	}
 	else if (nCmd == IDC_ABOUT)
 	{
@@ -214,7 +218,7 @@ void CdailycompletionDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 void CdailycompletionDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	__super::OnActivate(nState, pWndOther, bMinimized);
-	if (WA_INACTIVE == nState)
+	if (WA_INACTIVE == nState && !_bDontHide)
 	{
 		HideToTaskbar();
 	}

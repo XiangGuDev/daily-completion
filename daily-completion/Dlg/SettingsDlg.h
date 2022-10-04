@@ -29,6 +29,11 @@ protected:
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnClickAutoStart();
+	afx_msg void OnClickChange();
+private:
+	CDateTimeCtrl _dateCtrl; // 日期
+public:
+	afx_msg void OnDtnDatetimechangeDate(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

@@ -6,7 +6,18 @@
 
 void CTaskSystem::Init()
 {
-	GetUtility<CTaskSaveUtility>()->LoadData(_taskList);
+	SYSTEMTIME st;
+	CString filename = L"";
+	GetLocalTime(&st);
+	filename.Format(L"TaskData_%04d-%02d-%02d", st.wYear, st.wMonth, st.wDay);
+	_time.SetDate(st.wYear, st.wMonth, st.wDay);
+
+	auto utility = GetUtility<CTaskSaveUtility>();
+	utility->LoadData(_taskList);
+	if (utility->IsDataEmpty())
+	{
+		utility ->LoadFixed(_taskList);
+	}
 }
 
 void CTaskSystem::AddTask()
@@ -52,4 +63,12 @@ bool CTaskSystem::IsEmpty()
 void CTaskSystem::Save()
 {
 	GetUtility<CTaskSaveUtility>()->SaveData(_taskList);
+}
+
+void CTaskSystem::SetDate(int y, int m, int d)
+{
+	_time.SetDate(y, m, d);
+	GetUtility<CTaskSaveUtility>()->SetDate(y, m, d);
+	GetUtility<CTaskSaveUtility>()->LoadData(_taskList);
+	SendEvent<UpdateGridEvent>();
 }

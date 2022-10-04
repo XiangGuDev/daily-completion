@@ -43,6 +43,7 @@ private:
 	CBCGPEdit _editSearch; // 搜索
 	std::shared_ptr<CTaskListCtrl> _taskList; // 任务列表
 	std::shared_ptr< CSettingsDlg> _settingsDlg; // 设置窗口
+	bool _bDontHide;
 };
 
 
