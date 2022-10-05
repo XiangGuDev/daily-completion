@@ -544,6 +544,20 @@ namespace ControlUI
 		void SetFocusItem(int nSelectIndex = 0);
 
 		/**
+		*  @brief    设置焦点行;
+		*
+		*  @param    size_t nSelectIndex 默认选中行（数据索引）
+		*/
+		void SetFocusItem(int nBegin, int nEnd);
+		
+		/**
+		*  @brief    取消所有选择;
+		*
+		*  @param    size_t nSelectIndex 默认选中行（数据索引）
+		*/
+		void UnselectAll();
+
+		/**
 		*  @brief    设置焦点行
 		*
 		*  @param    size_t nKey 待设置焦点行的数据源
@@ -591,7 +605,8 @@ namespace ControlUI
 		*
 		*  @return   int 没有选中返回-1
 		*/
-		int GetSelectedIndex(bool bUp = true);
+		int GetSelectedIndex();
+		void GetSelectedIndex(int &nBegin, int &nEnd);
 
 		/**
 		*  @brief    获取所有行数
@@ -1090,7 +1105,7 @@ namespace ControlUI
 		*  @param    bool bNextRow	true选取下一行，否则选取上一行
 		*  @return   void
 		*/
-		void SetSelRowByKey(bool bNextRow);
+		void SetSelRowByKey(bool bDown);
 
 		/**
 		*  @brief    获取列头最大层级
@@ -1194,6 +1209,7 @@ namespace ControlUI
 		CTreeListConfig			*_pConfig;				///< 树型列表配置
 		CRect					_rcLastRect;			///< 记录控件上一次大小
 		bool					_bAutoColumnWidth;		///< 自动调整列宽标识
+		int						_nLastShiftItem;		///< 上一次Shift行
 		int						_nLastSelectItem;		///< 上一次选中行
 		CTitleTip				_cellToolTip;			///< 单元格提示信息
 		bool					_bUpDownFlag;			///< 键盘上下按键标志

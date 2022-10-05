@@ -5,7 +5,7 @@ namespace ControlUI
 {
 	// 控件禁用背景色
 #define DISABLE_BK_COLOR RGB(238,238,238)
-
+#define  IsKeyPressed(nVirtKey)     ((GetKeyState(nVirtKey) & (1<<(sizeof(SHORT)*8-1))) != 0)
 	CTreeListCtrl::CTreeListCtrl()
 	{
 		_showHeader = true;
@@ -41,6 +41,7 @@ namespace ControlUI
 		_rcLastRect = CRect(0, 0, 0, 0);
 		_bAutoColumnWidth = false;
 		_nLastSelectItem = -1;
+		_nLastShiftItem = -1;
 		_bUpDownFlag = false;
 		_bLinkOn = false;
 		_bColumnWordWarp = false;
@@ -742,19 +743,32 @@ namespace ControlUI
 		_bSingleSelect = bSingleSelect;
 	}
 
-	void CTreeListCtrl::SetFocusItem(int nSelectIndex)
+	void CTreeListCtrl::UnselectAll()
 	{
-		if (!_listDataSource.empty() && nSelectIndex >= (int)_listDataSource.size())
-			nSelectIndex = _listDataSource.size() - 1;
+		for (auto iter = _listDataSource.begin(); iter != _listDataSource.end(); ++iter)iter->second->seleced = false;
+	}
+
+	void CTreeListCtrl::SetFocusItem(int nBegin, int nEnd)
+	{
+		if (nBegin > nEnd)
+		{
+			int tmp = nBegin;
+			nBegin = nEnd;
+			nEnd = tmp;
+		}
+		if (nEnd < 0)
+			return;
+		nBegin = max(0, nBegin);
+		nEnd = min(_listDataSource.size(), nEnd);
 
 		int nCount = -1;
 		ListDataSourceIter endIter = _listDataSource.end();
 		for (ListDataSourceIter iter = _listDataSource.begin(); iter != endIter; ++iter)
 		{
-			if ((++nCount) == nSelectIndex)
+			++nCount;
+			if (nCount >= nBegin && nCount <= nEnd)
 			{
 				iter->second->seleced = true;
-				_nLastSelectItem = (int)nSelectIndex;
 			}
 			else
 			{
@@ -762,10 +776,19 @@ namespace ControlUI
 			}
 		}
 
+		if(nBegin == nEnd)
+			_nLastShiftItem = _nLastSelectItem = nEnd;
+
 		// 确保显示
-		MakeRowVisible(int(nSelectIndex));
+		for(int i = nBegin; i <= nEnd; ++i)
+			MakeRowVisible(i);
 
 		NotifyParent(LCN_SELECTED);
+	}
+
+	void CTreeListCtrl::SetFocusItem(int nSelectIndex)
+	{
+		SetFocusItem(nSelectIndex, nSelectIndex);
 	}
 
 	void CTreeListCtrl::SetFocusItemByDataSource(IListDataSource* pDataSource)
@@ -899,33 +922,29 @@ namespace ControlUI
 		}
 	}
 
-	int CTreeListCtrl::GetSelectedIndex(bool bUp)
+	void CTreeListCtrl::GetSelectedIndex(int &nBegin, int &nEnd)
 	{
-		if (bUp)
+		nBegin = -1, nEnd = -1;
+		int nSelIndex = 0;
+		ListDataSourceIter endIter = _listDataSource.end();
+		for (auto iter = _listDataSource.begin();
+			iter != endIter; ++iter, ++nSelIndex)
 		{
-			int nSelIndex = -1;
-			ListDataSourceIter endIter = _listDataSource.end();
-			for (ListDataSourceIter iter = _listDataSource.begin();
-				iter != endIter; ++iter, ++nSelIndex)
+			if (iter->second->seleced)
 			{
-				if (iter->second->seleced)
-				{
-					return ++nSelIndex;
-				}
+				if (nBegin < 0) nBegin = nSelIndex;
+				nEnd = nSelIndex;
+				continue;
 			}
+			if (nEnd > -1)break;
 		}
-		else
-		{
-			int nSelIndex = _listDataSource.size();
-			for (auto iter = _listDataSource.rbegin(); iter != _listDataSource.rend(); ++iter, --nSelIndex)
-			{
-				if (iter->second->seleced)
-				{
-					return --nSelIndex;
-				}
-			}
-		}
-		return -1;
+	}
+
+	int CTreeListCtrl::GetSelectedIndex()
+	{
+		int ret = -1, tmp = -1;
+		GetSelectedIndex(ret, tmp);
+		return ret;
 	}			
 
 
@@ -2350,7 +2369,7 @@ namespace ControlUI
 						bChange = true;
 
 					hItemSelect->seleced = true;
-					_nLastSelectItem = nRow;
+					_nLastShiftItem = _nLastSelectItem = nRow;
 				}
 				else
 				{
@@ -3290,46 +3309,31 @@ namespace ControlUI
 		return CWnd::PreTranslateMessage(pMsg);
 	}
 
-	void CTreeListCtrl::SetSelRowByKey(bool bNextRow)
+	void CTreeListCtrl::SetSelRowByKey(bool bDown)
 	{
-		if (_listDataSource.empty())
+		if (_listDataSource.empty() || _nLastSelectItem < 0)
 		{
 			return;
 		}
 
+		// 多选时检测Ctrl和Shift键按下状态
+		bool bPressShift = !_bSingleSelect && IsKeyPressed(VK_SHIFT);
+
 		// 遍历绘制行
-		int nSelIndex = GetSelectedIndex();
-		ListDataSourceIter iter = _listDataSource.begin();
-		ListDataSourceIter enditer = _listDataSource.end();
-		for (int i = 0; i < nSelIndex && nSelIndex > 0; ++i)
-		{
-			iter++;
-		}
-
-		int nNextRow =  GetSelectedIndex(!bNextRow);
-		size_t nCount = _listDataSource.size();
-
+		int nCount = _listDataSource.size();
 		while (true)
 		{
-			if (bNextRow)
+			if (bDown)
 			{
-				nNextRow = min(nNextRow + 1, nCount - 1);
-				if (++iter == enditer)
-				{
-					iter = _listDataSource.begin();
-				}
+				_nLastSelectItem = min(_nLastSelectItem + 1, nCount - 1);
+
 			}
 			else
 			{
-				nNextRow = (nNextRow < 0) ? 0 : nNextRow;
-				nNextRow = max(nNextRow - 1, 0);
-				if (iter == _listDataSource.begin())
-				{
-					iter = enditer;
-				}
-				--iter;
+				_nLastSelectItem = max(_nLastSelectItem - 1, 0);
 			}
 
+			ListDataSourceIter iter = std::next(_listDataSource.begin(), _nLastSelectItem);
 			HITEMDATA hItemData = iter->second;
 			HITEMDATA hParentData = hItemData->hParentData;
 
@@ -3340,7 +3344,18 @@ namespace ControlUI
 			}
 		}
 
-		SetFocusItem(nNextRow);
+		if (bPressShift)
+		{
+			OutputDebugString(L"bPressShift = true\n");
+			int nMin = min(_nLastShiftItem, _nLastSelectItem);
+			int nMax = max(_nLastShiftItem, _nLastSelectItem);
+			SetFocusItem(nMin, nMax);
+		}
+		else
+		{
+			OutputDebugString(L"bPressShift = false\n");
+			SetFocusItem(_nLastSelectItem);
+		}
 	}
 
 	bool CTreeListCtrl::SetFocusItemByCString(const CString& strSel)

@@ -1,4 +1,4 @@
 ﻿<Document>
-	<FixedTask name="新任务(双击重命名)" fixed="True" complete="True" />
-	<FixedTask name="新任务(双击重命名)" fixed="True" complete="True" />
+	<FixedTask name="新任务(双击重命名)" fixed="True" complete="False" />
+	<FixedTask name="新任务(双击重命名)" fixed="True" complete="False" />
 </Document>

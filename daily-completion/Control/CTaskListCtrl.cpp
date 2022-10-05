@@ -98,7 +98,7 @@ void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 		{
 			pSubMenu->RemoveMenu(IDC_COMPLETE, MF_BYCOMMAND);
 		}
-		else
+		if (std::find_if(taskList.begin(), taskList.end(), [](auto t) {return t->bComplete;}) == taskList.end())
 		{
 			pSubMenu->RemoveMenu(IDC_REDO, MF_BYCOMMAND);
 		}
@@ -106,7 +106,7 @@ void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 		{
 			pSubMenu->RemoveMenu(IDC_FIXED, MF_BYCOMMAND);
 		}
-		else
+		if (std::find_if(taskList.begin(), taskList.end(), [](auto t) {return t->bFixed;}) == taskList.end())
 		{
 			pSubMenu->RemoveMenu(IDC_UNFIXED, MF_BYCOMMAND);
 		}
@@ -174,7 +174,7 @@ void CTaskListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	if (_hHoverRow == NULL)
 	{
-		SetFocusItem(-1);
+		UnselectAll();
 	}
 	__super::OnLButtonUp(nFlags, point);
 }
