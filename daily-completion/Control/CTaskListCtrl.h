@@ -8,6 +8,8 @@ public:
 	CTaskListCtrl();
 	DECLARE_MESSAGE_MAP()
 public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	void OnUpdateGrid(std::shared_ptr<UpdateGridEvent> e);
 	void OnSearchKeyChanged(const CString &strOld, const CString &strNew);
@@ -18,7 +20,5 @@ private:
 	std::function<void(std::shared_ptr<UpdateGridEvent> e)> _OnUpdateGrid;
 private:
 	CImageList _imageList; // Õº±Í¡–±Ì
-public:
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 

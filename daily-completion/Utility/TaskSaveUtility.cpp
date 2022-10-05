@@ -4,7 +4,6 @@
 
 CTaskSaveUtility::CTaskSaveUtility()
 {
-	// ¶ÁÈ¡ÎÄ¼þ
 	SYSTEMTIME st;
 	CString filename = L"";
 	GetLocalTime(&st);
@@ -15,8 +14,9 @@ CTaskSaveUtility::CTaskSaveUtility()
 
 void CTaskSaveUtility::SaveData(const std::vector<std::shared_ptr<Task>>& inVec)
 {
-	_doc.Clear();
-	auto pRoot = _doc.GetElementRoot();
+	CXmlDocument doc;
+	doc.Clear();
+	auto pRoot = doc.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();
 	for (int i = 0; i < inVec.size(); ++i)
@@ -28,21 +28,22 @@ void CTaskSaveUtility::SaveData(const std::vector<std::shared_ptr<Task>>& inVec)
 		elem->SetAttrValue(L"fixed", CConvert::Bool2Text(task->bFixed));
 		elem->SetAttrValue(L"complete", CConvert::Bool2Text(task->bComplete));
 	}
-	_doc.SaveFile(_strDataPath, fmtXMLUTF8);
+	doc.SaveFile(_strDataPath, fmtXMLUTF8);
 	SaveFixed(inVec);
 }
 
 void CTaskSaveUtility::LoadData(std::vector<std::shared_ptr<Task>>& outVec)
 {
+	CXmlDocument doc;
 	outVec.clear();
-	_doc.Clear();
+	doc.Clear();
 	_bDataEmpty = !CFileTool::FileExist(_strDataPath);
-	if (!_doc.LoadFile(_strDataPath, fmtXMLUTF8))
+	if (!doc.LoadFile(_strDataPath, fmtXMLUTF8))
 	{
-		OutputDebugString(L"_doc load failed");
+		OutputDebugString(L"doc load failed");
 		return;
 	}
-	auto pRoot = _doc.GetElementRoot();
+	auto pRoot = doc.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();
 	for (int i = 0; i < elems->GetCount(); ++i)
@@ -58,8 +59,9 @@ void CTaskSaveUtility::LoadData(std::vector<std::shared_ptr<Task>>& outVec)
 
 void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec)
 {
-	_docFixed.Clear();
-	auto pRoot = _docFixed.GetElementRoot();
+	CXmlDocument docFixed;
+	docFixed.Clear();
+	auto pRoot = docFixed.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();
 	if (inVec.empty()) return;
@@ -75,7 +77,7 @@ void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec
 		elem->SetAttrValue(L"complete", CConvert::Bool2Text(task->bComplete));
 	}
 	if (pRoot->GetChildElementCount() == 0)return;
-	_docFixed.SaveFile(_strFixedPath, fmtXMLUTF8);
+	docFixed.SaveFile(_strFixedPath, fmtXMLUTF8);
 }
 
 void CTaskSaveUtility::SetDate(int y, int m, int d)
@@ -87,15 +89,16 @@ void CTaskSaveUtility::SetDate(int y, int m, int d)
 
 void CTaskSaveUtility::LoadFixed(std::vector<std::shared_ptr<Task>> &outVec)
 {
+	CXmlDocument docFixed;
 	outVec.clear();
-	_docFixed.Clear();
-	if (!_docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
+	docFixed.Clear();
+	if (!docFixed.LoadFile(_strFixedPath, fmtXMLUTF8))
 	{
-		OutputDebugString(L"_docFixed load failed");
+		OutputDebugString(L"docFixed load failed");
 		return;
 	}
 
-	auto pRoot = _docFixed.GetElementRoot();
+	auto pRoot = docFixed.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();
 	for (int i = 0; i < elems->GetCount(); ++i)

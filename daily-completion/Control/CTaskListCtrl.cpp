@@ -6,6 +6,7 @@
 #include "../Adapters/TaskAdapter.h"
 #include "../Model/GlobalModel.h"
 #include "../Model/UpdateGridEvent.h"
+#include <algorithm>
 
 using namespace ControlUI;
 
@@ -13,6 +14,7 @@ BEGIN_MESSAGE_MAP(CTaskListCtrl, CTreeListCtrl)
 	ON_WM_RBUTTONUP()
 	ON_WM_DESTROY()
 	ON_WM_CREATE()
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 CTaskListCtrl::CTaskListCtrl()
@@ -20,7 +22,7 @@ CTaskListCtrl::CTaskListCtrl()
 	_bkColor = RGB(240, 240, 240);
 	_OnSearchKeyChanged = std::bind(&CTaskListCtrl::OnSearchKeyChanged, this, std::placeholders::_1, std::placeholders::_2);
 	_OnUpdateGrid = std::bind(&CTaskListCtrl::OnUpdateGrid, this, std::placeholders::_1);
-
+	SetSingleSelect(false);
 }
 
 int CTaskListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -63,15 +65,14 @@ void CTaskListCtrl::LoadIcon(const std::vector<CString>& pathList)
 void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	// 处理点击空白处的右键菜单弹出
-	auto curAdapt = static_cast<CTaskAdapter *>(GetSelectedItem());
-	bool bComplete = false;
-	bool bFixed = false;
-	std::shared_ptr<Task> task;
-	if (curAdapt)
+	DataSourceArray arr;
+	GetSelectedItems(arr);
+	std::vector<std::shared_ptr<Task>> taskList;
+	auto taskSys = GetSystem<CTaskSystem>();
+	for (auto item : arr)
 	{
-		task = curAdapt->GetTask();
-		bFixed = task->bFixed;
-		bComplete = task->bComplete;
+		auto curAdapt = static_cast<CTaskAdapter *>(item);
+		taskList.push_back(curAdapt->GetTask());
 	}
 
 	CPoint curPt;
@@ -83,7 +84,7 @@ void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 	CMenu *pSubMenu = rightMenu.GetSubMenu(1);
 	if (pSubMenu == NULL)
 		return;
-	if (_hHoverRow == NULL || task == NULL)
+	if (_hHoverRow == NULL || arr.empty())
 	{
 		pSubMenu->RemoveMenu(IDC_DEL, MF_BYCOMMAND);
 		pSubMenu->RemoveMenu(IDC_COMPLETE, MF_BYCOMMAND);
@@ -93,7 +94,7 @@ void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 	}
 	else
 	{
-		if (bComplete)
+		if (std::find_if(taskList.begin(), taskList.end(), [](auto t) {return !t->bComplete;}) == taskList.end())
 		{
 			pSubMenu->RemoveMenu(IDC_COMPLETE, MF_BYCOMMAND);
 		}
@@ -101,7 +102,7 @@ void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 		{
 			pSubMenu->RemoveMenu(IDC_REDO, MF_BYCOMMAND);
 		}
-		if (bFixed)
+		if (std::find_if(taskList.begin(), taskList.end(), [](auto t) {return !t->bFixed;}) == taskList.end())
 		{
 			pSubMenu->RemoveMenu(IDC_FIXED, MF_BYCOMMAND);
 		}
@@ -115,36 +116,41 @@ void CTaskListCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 		curPt.x, curPt.y, this);
 	if (nCmd == IDC_NEW)
 	{
-		GetSystem<CTaskSystem>()->AddTask();
+		taskSys->AddTask();
 		OnUpdateGrid(std::make_shared<UpdateGridEvent>());
 	}
 	else if (nCmd == IDC_DEL)
 	{
-		GetSystem<CTaskSystem>()->RemoveTask(task);
+		for(auto task : taskList)
+			taskSys->RemoveTask(task);
 	}
 	else if (nCmd == IDC_REDO)
 	{
-		task->bComplete = false;
+		for(auto task : taskList)
+			task->bComplete = false;
 		OnUpdateGrid(std::make_shared<UpdateGridEvent>());
-		GetSystem<CTaskSystem>()->Save();
+		taskSys->Save();
 	}
 	else if (nCmd == IDC_COMPLETE)
 	{
-		task->bComplete = true;
+		for (auto task : taskList)
+			task->bComplete = true;
 		OnUpdateGrid(std::make_shared<UpdateGridEvent>());
-		GetSystem<CTaskSystem>()->Save();
+		taskSys->Save();
 	}
 	else if (nCmd == IDC_FIXED)
 	{
-		task->bFixed = true;
+		for (auto task : taskList)
+			task->bFixed = true;
 		OnUpdateGrid(std::make_shared<UpdateGridEvent>());
-		GetSystem<CTaskSystem>()->Save();
+		taskSys->Save();
 	}
 	else if (nCmd == IDC_UNFIXED)
 	{
-		task->bFixed = false;
+		for (auto task : taskList)
+			task->bFixed = false;
 		OnUpdateGrid(std::make_shared<UpdateGridEvent>());
-		GetSystem<CTaskSystem>()->Save();
+		taskSys->Save();
 	}
 	CTreeListCtrl::OnRButtonUp(nFlags, point);
 }
@@ -161,3 +167,14 @@ void CTaskListCtrl::OnSearchKeyChanged(const CString & strOld, const CString & s
 	UpdateList(TRUE);
 }
 
+
+
+void CTaskListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (_hHoverRow == NULL)
+	{
+		SetFocusItem(-1);
+	}
+	__super::OnLButtonUp(nFlags, point);
+}

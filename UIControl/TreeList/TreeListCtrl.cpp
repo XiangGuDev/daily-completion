@@ -742,9 +742,9 @@ namespace ControlUI
 		_bSingleSelect = bSingleSelect;
 	}
 
-	void CTreeListCtrl::SetFocusItem(size_t nSelectIndex)
+	void CTreeListCtrl::SetFocusItem(int nSelectIndex)
 	{
-		if (!_listDataSource.empty() && nSelectIndex >= _listDataSource.size())
+		if (!_listDataSource.empty() && nSelectIndex >= (int)_listDataSource.size())
 			nSelectIndex = _listDataSource.size() - 1;
 
 		int nCount = -1;
@@ -899,22 +899,35 @@ namespace ControlUI
 		}
 	}
 
-	int CTreeListCtrl::GetSelectedIndex()
+	int CTreeListCtrl::GetSelectedIndex(bool bUp)
 	{
-		int nSelIndex = -1;
-
-		ListDataSourceIter endIter = _listDataSource.end();
-		for (ListDataSourceIter iter = _listDataSource.begin();
-			iter != endIter; ++iter, ++nSelIndex)
+		if (bUp)
 		{
-			if (iter->second->seleced)
+			int nSelIndex = -1;
+			ListDataSourceIter endIter = _listDataSource.end();
+			for (ListDataSourceIter iter = _listDataSource.begin();
+				iter != endIter; ++iter, ++nSelIndex)
 			{
-				return ++nSelIndex;
+				if (iter->second->seleced)
+				{
+					return ++nSelIndex;
+				}
 			}
 		}
-
+		else
+		{
+			int nSelIndex = _listDataSource.size();
+			for (auto iter = _listDataSource.rbegin(); iter != _listDataSource.rend(); ++iter, --nSelIndex)
+			{
+				if (iter->second->seleced)
+				{
+					return --nSelIndex;
+				}
+			}
+		}
 		return -1;
-	}
+	}			
+
 
 	size_t CTreeListCtrl::GetTotalRowCount()
 	{
@@ -3293,14 +3306,14 @@ namespace ControlUI
 			iter++;
 		}
 
-		int nNextRow = nSelIndex;
+		int nNextRow =  GetSelectedIndex(!bNextRow);
 		size_t nCount = _listDataSource.size();
 
 		while (true)
 		{
 			if (bNextRow)
 			{
-				nNextRow = int((nNextRow + 1) % nCount);
+				nNextRow = min(nNextRow + 1, nCount - 1);
 				if (++iter == enditer)
 				{
 					iter = _listDataSource.begin();
@@ -3309,7 +3322,7 @@ namespace ControlUI
 			else
 			{
 				nNextRow = (nNextRow < 0) ? 0 : nNextRow;
-				nNextRow = int((nNextRow - 1 + nCount) % nCount);
+				nNextRow = max(nNextRow - 1, 0);
 				if (iter == _listDataSource.begin())
 				{
 					iter = enditer;

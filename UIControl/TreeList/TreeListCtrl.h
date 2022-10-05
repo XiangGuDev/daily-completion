@@ -541,7 +541,7 @@ namespace ControlUI
 		*
 		*  @param    size_t nSelectIndex 默认选中行（数据索引）
 		*/
-		void SetFocusItem(size_t nSelectIndex = 0);
+		void SetFocusItem(int nSelectIndex = 0);
 
 		/**
 		*  @brief    设置焦点行
@@ -591,7 +591,7 @@ namespace ControlUI
 		*
 		*  @return   int 没有选中返回-1
 		*/
-		int GetSelectedIndex();
+		int GetSelectedIndex(bool bUp = true);
 
 		/**
 		*  @brief    获取所有行数

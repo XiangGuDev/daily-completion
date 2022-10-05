@@ -12,8 +12,6 @@ public:
 	bool IsDataEmpty() { return _bDataEmpty; }
 	void SetDate(int y, int m, int d);
 private:
-	CXmlDocument _doc;
-	CXmlDocument _docFixed;
 	CString _strDataPath;
 	CString _strFixedPath;
 	bool _bDataEmpty; // 文件数据为空
