@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CdailycompletionDlg, CBaseTaskDlg)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDC_MENU_BTN, &CdailycompletionDlg::OnClickMenu)
 	ON_EN_CHANGE(IDC_SEARCH, &CdailycompletionDlg::OnSearchKeyChanged)
+	ON_NOTIFY(LCN_ENDEDITDONE, IDC_TASKLIST, &CdailycompletionDlg::OnTaskListEdit)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 	ON_WM_HOTKEY()
@@ -222,4 +223,9 @@ void CdailycompletionDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimiz
 	{
 		HideToTaskbar();
 	}
+}
+
+void CdailycompletionDlg::OnTaskListEdit(NMHDR * pNMHDR, LRESULT * pResult)
+{
+	GetSystem<CTaskSystem>()->Save();
 }

@@ -38,6 +38,7 @@ public:
 	afx_msg void OnSearchKeyChanged();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
+	afx_msg void OnTaskListEdit(NMHDR *pNMHDR, LRESULT *pResult);
 private:
 	CBCGPButton _btnMenu; // 菜单
 	CBCGPEdit _editSearch; // 搜索
