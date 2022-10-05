@@ -8,8 +8,14 @@ CTaskSaveUtility::CTaskSaveUtility()
 	CString filename = L"";
 	GetLocalTime(&st);
 	filename.Format(L"TaskData_%04d-%02d-%02d", st.wYear, st.wMonth, st.wDay);
-	_strDataPath = CPathConfig::GetAppStartPath() + L"Data/" + filename + L".xml";
-	_strFixedPath = CPathConfig::GetAppStartPath() + L"Data/FixedTask.xml";
+
+	CString strPersistent = CPathConfig::GetPersistentPath();
+	CString strData = CPathConfig::GetPersistentPath() + L"Data\\";
+	if (!CFileTool::DirectoryExist(strPersistent)) CFileTool::CreateDirectory(strPersistent);
+	if (!CFileTool::DirectoryExist(strData)) CFileTool::CreateDirectory(strData);
+
+	_strDataPath = CPathConfig::GetPersistentPath() + L"Data/" + filename + L".xml";
+	_strFixedPath = CPathConfig::GetPersistentPath() + L"Data/FixedTask.xml";
 }
 
 void CTaskSaveUtility::SaveData(const std::vector<std::shared_ptr<Task>>& inVec)
@@ -84,7 +90,7 @@ void CTaskSaveUtility::SetDate(int y, int m, int d)
 {
 	CString filename = L"";
 	filename.Format(L"TaskData_%04d-%02d-%02d", y, m, d);
-	_strDataPath = CPathConfig::GetAppStartPath() + L"Data/" + filename + L".xml";
+	_strDataPath = CPathConfig::GetPersistentPath() + L"Data/" + filename + L".xml";
 }
 
 void CTaskSaveUtility::LoadFixed(std::vector<std::shared_ptr<Task>> &outVec)

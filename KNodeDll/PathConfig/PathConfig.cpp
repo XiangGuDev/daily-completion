@@ -3,6 +3,36 @@
 
 namespace CommBase
 {
+	CString CPathConfig::GetProjectName()
+	{
+		CString strPrjName;
+		if (strPrjName.IsEmpty())
+		{
+			TCHAR AppPath[MAX_PATH] = { 0 };
+			::GetModuleFileName(NULL, AppPath, MAX_PATH);
+			TCHAR *beg = _tcsrchr(AppPath, _T('\\'));
+			beg++;
+			TCHAR *end = _tcsrchr(AppPath, _T('.'));
+			*end = _T('\0');
+			strPrjName = beg;
+		}
+		return strPrjName;
+		
+	}
+
+	CString CPathConfig::GetPersistentPath()
+	{
+		static CString strPersistentPath;
+		if (strPersistentPath.IsEmpty())
+		{
+			wchar_t buffer[MAX_PATH];
+			BOOL result = SHGetSpecialFolderPath(0, buffer, CSIDL_LOCAL_APPDATA, false);
+			strPersistentPath = buffer;
+			strPersistentPath += L"\\" + GetProjectName() + L"\\";
+		}
+		return strPersistentPath;
+	}
+
 	CString CPathConfig::GetPluginPath()
 	{
 		return GetAppStartPath() + L"Plugin\\";

@@ -61,7 +61,6 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	font.DeleteObject();
 	font.CreatePointFont(135, _T("微软雅黑"));
 
-
 	int menuLen = 10; // 菜单边长
 	
 	// 任务列表
@@ -116,6 +115,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	RegisterHotKey(m_hWnd, 1001, MOD_CONTROL | MOD_SHIFT, 'A');
 	CenterWindow();
 	HideToTaskbar();
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 

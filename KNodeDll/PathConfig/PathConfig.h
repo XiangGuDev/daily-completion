@@ -16,6 +16,12 @@ namespace CommBase
 	class COMMBASE_API CPathConfig
 	{
 	public:
+		// 获取项目名称
+		static CString GetProjectName();
+
+		// 获取持久化存储路径
+		static CString GetPersistentPath();
+
 		/**
 		*  @brief    获取插件目录
 		*
