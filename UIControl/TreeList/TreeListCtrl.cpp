@@ -3346,14 +3346,14 @@ namespace ControlUI
 
 		if (bPressShift)
 		{
-			OutputDebugString(L"bPressShift = true\n");
+			//OutputDebugString(L"bPressShift = true\n");
 			int nMin = min(_nLastShiftItem, _nLastSelectItem);
 			int nMax = max(_nLastShiftItem, _nLastSelectItem);
 			SetFocusItem(nMin, nMax);
 		}
 		else
 		{
-			OutputDebugString(L"bPressShift = false\n");
+			//OutputDebugString(L"bPressShift = false\n");
 			SetFocusItem(_nLastSelectItem);
 		}
 	}
