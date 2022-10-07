@@ -245,6 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\daily-completion.ico" />
+    <Image Include="res\icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
