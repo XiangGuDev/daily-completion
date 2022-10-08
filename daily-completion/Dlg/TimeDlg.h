@@ -34,11 +34,15 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnClickIcon();
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+	afx_msg LRESULT OnNcHitTest(CPoint point);
 private:
 	CBCGPStatic _content;
 	CBCGPButton _btnIcon;
 	bool _bStart;
 public:
-	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 

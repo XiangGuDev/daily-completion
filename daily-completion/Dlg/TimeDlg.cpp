@@ -16,6 +16,10 @@ BEGIN_MESSAGE_MAP(CTimeDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_ICON, &CTimeDlg::OnClickIcon)
 	ON_WM_TIMER()
 	ON_WM_RBUTTONUP()
+	ON_WM_NCHITTEST()
+	ON_WM_ERASEBKGND()
+	ON_WM_CTLCOLOR()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 CTimeDlg::CTimeDlg(CWnd* pParent /*=nullptr*/)
@@ -81,6 +85,27 @@ BOOL CTimeDlg::OnInitDialog()
 	rcClient.top += 5;
 	rcClient.bottom -= 5;
 
+	// 窗口置顶
+	{
+		::SetWindowPos(GetSafeHwnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+	}
+
+	// 圆角
+	{
+		CRect rc;
+		GetWindowRect(&rc);
+		CRgn rgn;
+		rc -= rc.TopLeft();
+		rgn.CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 10, 10);
+		SetWindowRgn(rgn, TRUE);
+	}
+
+	// 窗口透明
+	{
+		
+
+	}
+
 	// 图标按钮
 	{
 		CRect rcBtn = rcClient;
@@ -91,6 +116,7 @@ BOOL CTimeDlg::OnInitDialog()
 		_btnIcon.m_nFlatStyle = CBCGPButton::BUTTONSTYLE_NOBORDERS;
 		_btnIcon.ShowWindow(SW_SHOW);
 		_btnIcon.SetFont(&font);//设置字体
+		_btnIcon.m_bTransparent = true;
 	}
 	// 内容
 	{
@@ -185,4 +211,45 @@ void CTimeDlg::OnRButtonUp(UINT nFlags, CPoint point)
 	HMENU hmenu = menu.Detach();
 	menu.DestroyMenu();
 	__super::OnRButtonUp(nFlags, point);
+}
+
+
+LRESULT CTimeDlg::OnNcHitTest(CPoint point)
+{
+	return __super::OnNcHitTest(point);
+}
+
+
+BOOL CTimeDlg::OnEraseBkgnd(CDC* pDC)
+{
+	return CDialogEx::OnEraseBkgnd(pDC);
+}
+
+
+HBRUSH CTimeDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+	if (pWnd->GetDlgCtrlID() == IDC_BTN_ICON || pWnd->GetDlgCtrlID() == IDC_CONTENT)
+	{
+		pDC->SetTextColor(RGB(0, 0, 0));
+		pDC->SetBkMode(TRANSPARENT);
+		return   (HBRUSH)::GetStockObject(NULL_BRUSH);
+	}
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	return hbr;
+}
+
+
+void CTimeDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// 调用父类处理函数完成基本操作
+	__super::OnLButtonDown(nFlags, point);
+
+	// 拖拽效果
+	PostMessage(WM_NCLBUTTONDOWN,
+		HTCAPTION,
+		MAKELPARAM(point.x, point.y));
 }
