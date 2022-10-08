@@ -14,6 +14,7 @@ namespace ControlUI
 }
 class CTaskListCtrl;
 class CSettingsDlg;
+class CTimeSettingDlg;
 class CdailycompletionDlg : public CBaseTaskDlg, public DCController
 {
 public:
@@ -34,6 +35,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnClickMenu();
+	afx_msg void OnClickTimeSetting();
 	afx_msg void OnDestroy();
 	afx_msg void OnSearchKeyChanged();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
@@ -41,9 +43,11 @@ public:
 	afx_msg void OnTaskListEdit(NMHDR *pNMHDR, LRESULT *pResult);
 private:
 	CBCGPButton _btnMenu; // 菜单
+	CBCGPButton _btnTimeSetting; // 菜单
 	CBCGPEdit _editSearch; // 搜索
 	std::shared_ptr<CTaskListCtrl> _taskList; // 任务列表
 	std::shared_ptr< CSettingsDlg> _settingsDlg; // 设置窗口
+	std::shared_ptr< CTimeSettingDlg> _timeDlg; // 时间设置窗口
 	bool _bDontHide;
 };
 

@@ -205,8 +205,11 @@
     <ClInclude Include="Base\DCController.h" />
     <ClInclude Include="Control\CTaskListCtrl.h" />
     <ClInclude Include="Dlg\SettingsDlg.h" />
+    <ClInclude Include="Dlg\TimeDlg.h" />
+    <ClInclude Include="Dlg\TimeSettingDlg.h" />
     <ClInclude Include="Model\GlobalModel.h" />
     <ClInclude Include="Model\UpdateGridEvent.h" />
+    <ClInclude Include="System\TimeSystem.h" />
     <ClInclude Include="Utility\AutoStartUtility.h" />
     <ClInclude Include="System\TaskSystem.h" />
     <ClInclude Include="daily-completion.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="App\PointApp.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Utility\LayoutUtility.h" />
     <ClInclude Include="Utility\TaskSaveUtility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +228,9 @@
     <ClCompile Include="Base\BaseTaskDlg.cpp" />
     <ClCompile Include="Control\CTaskListCtrl.cpp" />
     <ClCompile Include="Dlg\SettingsDlg.cpp" />
+    <ClCompile Include="Dlg\TimeDlg.cpp" />
+    <ClCompile Include="Dlg\TimeSettingDlg.cpp" />
+    <ClCompile Include="System\TimeSystem.cpp" />
     <ClCompile Include="Utility\AutoStartUtility.cpp" />
     <ClCompile Include="System\TaskSystem.cpp" />
     <ClCompile Include="daily-completion.cpp" />
@@ -235,6 +242,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="App\PointApp.cpp" />
+    <ClCompile Include="Utility\LayoutUtility.cpp" />
     <ClCompile Include="Utility\TaskSaveUtility.cpp" />
   </ItemGroup>
   <ItemGroup>

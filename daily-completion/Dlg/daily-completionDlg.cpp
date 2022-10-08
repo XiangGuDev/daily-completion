@@ -12,8 +12,10 @@
 #include "../Adapters/TaskAdapter.h"
 #include "../Control/CTaskListCtrl.h"
 #include "SettingsDlg.h"
+#include "TimeSettingDlg.h"
 #include "../Model/GlobalModel.h"
 #include "../Model/UpdateGridEvent.h"
+#include "TimeDlg.h"
 
 using namespace YFramework;
 using namespace ControlUI;
@@ -25,6 +27,7 @@ using namespace ControlUI;
 BEGIN_MESSAGE_MAP(CdailycompletionDlg, CBaseTaskDlg)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDC_MENU_BTN, &CdailycompletionDlg::OnClickMenu)
+	ON_BN_CLICKED(IDC_TIMESETTING_BTN, &CdailycompletionDlg::OnClickTimeSetting)
 	ON_EN_CHANGE(IDC_SEARCH, &CdailycompletionDlg::OnSearchKeyChanged)
 	ON_NOTIFY(LCN_ENDEDITDONE, IDC_TASKLIST, &CdailycompletionDlg::OnTaskListEdit)
 	ON_WM_QUERYDRAGICON()
@@ -56,19 +59,26 @@ BOOL CdailycompletionDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	_settingsDlg = std::make_shared<CSettingsDlg>(this);
+	_timeDlg = std::make_shared<CTimeSettingDlg>(this);
 
 	static CFont font;
 	font.DeleteObject();
 	font.CreatePointFont(135, _T("微软雅黑"));
 
-	int menuLen = 10; // 菜单边长
+	int btnLen = 10; // 按钮边长
 	
+	// 时间
+	{
+		CTimeDlg::Instance()->Create(CTimeDlg::IDD);
+		CTimeDlg::Instance()->CenterWindow();
+		CTimeDlg::Instance()->ShowWindow(SW_HIDE);
+	}
 	// 任务列表
 	{
 		CRect rcTree;
 		GetClientRect(&rcTree);
-		menuLen = rcTree.Height() / 10;
-		rcTree.bottom -= menuLen;
+		btnLen = rcTree.Height() / 10;
+		rcTree.bottom -= btnLen;
 
 		_taskList = std::make_shared<CTaskListCtrl>();
 		_taskList->Create(rcTree, this, IDC_TASKLIST);
@@ -90,7 +100,7 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		CRect rcSc;
 		GetClientRect(&rcSc);
 		rcSc.top += rcSc.Height() * 9 / 10;
-		rcSc.right -= menuLen;
+		rcSc.right -= btnLen * 2;
 		_editSearch.Create(WS_BORDER | WS_CHILD | WS_VISIBLE, rcSc, this, IDC_SEARCH);
 		_editSearch.ShowWindow(SW_SHOW);
 		_editSearch.SetFont(&font);//设置字体
@@ -99,12 +109,26 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		colTheme.m_clrBackground = RGB(240, 240, 240);
 		_editSearch.SetColorTheme(colTheme);
 	}
+	// 时间设置按钮
+	{
+		CRect rcBtn;
+		GetClientRect(&rcBtn);
+		rcBtn.top += rcBtn.Height() * 9 / 10;
+		rcBtn.left = rcBtn.right - btnLen * 2;
+		rcBtn.right -= btnLen;
+		_btnTimeSetting.Create(L"", WS_BORDER | WS_CHILD | WS_VISIBLE, rcBtn, this, IDC_TIMESETTING_BTN);
+		HICON hIconOK=(HICON)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME), IMAGE_ICON, 0,0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION);//加载图标，第四、五个参数为设置图标大小
+		_btnTimeSetting.SetIcon(hIconOK);
+		_btnTimeSetting.m_nFlatStyle = CBCGPButton::BUTTONSTYLE_NOBORDERS;
+		_btnTimeSetting.ShowWindow(SW_SHOW);
+		_btnTimeSetting.SetFont(&font);//设置字体
+	}
 	// 菜单
 	{
 		CRect rcMenu;
 		GetClientRect(&rcMenu);
 		rcMenu.top += rcMenu.Height() * 9 / 10;
-		rcMenu.left = rcMenu.right - menuLen;
+		rcMenu.left = rcMenu.right - btnLen;
 		_btnMenu.Create(L"···", WS_BORDER | WS_CHILD | WS_VISIBLE, rcMenu, this, IDC_MENU_BTN);
 		_btnMenu.m_nFlatStyle = CBCGPButton::BUTTONSTYLE_NOBORDERS;
 		_btnMenu.ShowWindow(SW_SHOW);
@@ -163,6 +187,13 @@ void CdailycompletionDlg::OnPaint()
 HCURSOR CdailycompletionDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CdailycompletionDlg::OnClickTimeSetting()
+{
+	_bDontHide = true;
+	_timeDlg->DoModal();
+	_bDontHide = false;
 }
 
 void CdailycompletionDlg::OnClickMenu()
