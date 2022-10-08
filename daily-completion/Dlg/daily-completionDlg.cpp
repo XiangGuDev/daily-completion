@@ -67,6 +67,10 @@ BOOL CdailycompletionDlg::OnInitDialog()
 
 	int btnLen = 10; // 按钮边长
 	
+	// 窗口置顶
+	{
+		::SetWindowPos(GetSafeHwnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+	}
 	// 时间
 	{
 		CTimeDlg::Instance()->Create(CTimeDlg::IDD);

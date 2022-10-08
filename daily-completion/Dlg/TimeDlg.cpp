@@ -92,18 +92,19 @@ BOOL CTimeDlg::OnInitDialog()
 
 	// 圆角
 	{
-		CRect rc;
+		/*CRect rc;
 		GetWindowRect(&rc);
 		CRgn rgn;
 		rc -= rc.TopLeft();
 		rgn.CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 10, 10);
-		SetWindowRgn(rgn, TRUE);
+		SetWindowRgn(rgn, TRUE);*/
 	}
 
 	// 窗口透明
 	{
-		
-
+		SetWindowLong(GetSafeHwnd(), GWL_EXSTYLE, GetWindowLong(GetSafeHwnd(), GWL_EXSTYLE) | WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(GetSafeHwnd(), 0, 128, LWA_ALPHA);
+		ModifyStyleEx(WS_EX_TRANSPARENT, 0, SWP_FRAMECHANGED);
 	}
 
 	// 图标按钮
@@ -158,7 +159,7 @@ void CTimeDlg::OnPaint()
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		__super::OnPaint();
 	}
 }
 
@@ -222,7 +223,19 @@ LRESULT CTimeDlg::OnNcHitTest(CPoint point)
 
 BOOL CTimeDlg::OnEraseBkgnd(CDC* pDC)
 {
-	return CDialogEx::OnEraseBkgnd(pDC);
+	CRect rect;
+	GetClientRect(rect);        //取得窗体窗户区区域
+	CRgn myrgn1, myrgn2;
+	myrgn1.CreateRoundRectRgn(0, 0, rect.Width(), rect.Height(), 10, 10);//圆角的窗体区域
+	CBrush frameBrush, titlebrush, bgbrush;
+	bgbrush.CreateSolidBrush(RGB(217, 210, 233));//主窗体背景色画刷
+	frameBrush.CreateSolidBrush(RGB(200, 200, 200));
+	CBrush *pBrush = CBrush::FromHandle((HBRUSH)GetStockObject(NULL_BRUSH));
+	pDC->FillRgn(&myrgn1, &bgbrush);
+	pDC->FrameRgn(&myrgn1, &frameBrush, 1, 1);
+	pDC->SetBkMode(TRANSPARENT);
+
+	return true;
 }
 
 
@@ -245,11 +258,7 @@ HBRUSH CTimeDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 void CTimeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// 调用父类处理函数完成基本操作
-	__super::OnLButtonDown(nFlags, point);
-
 	// 拖拽效果
-	PostMessage(WM_NCLBUTTONDOWN,
-		HTCAPTION,
-		MAKELPARAM(point.x, point.y));
+	__super::OnLButtonDown(nFlags, point);
+	PostMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
 }
