@@ -20,9 +20,7 @@
 using namespace YFramework;
 using namespace ControlUI;
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+#define WM_MOUSEBUTTONDOWN WM_USER+777
 
 BEGIN_MESSAGE_MAP(CdailycompletionDlg, CBaseTaskDlg)
 	ON_WM_PAINT()
@@ -30,11 +28,48 @@ BEGIN_MESSAGE_MAP(CdailycompletionDlg, CBaseTaskDlg)
 	ON_BN_CLICKED(IDC_TIMESETTING_BTN, &CdailycompletionDlg::OnClickTimeSetting)
 	ON_EN_CHANGE(IDC_SEARCH, &CdailycompletionDlg::OnSearchKeyChanged)
 	ON_NOTIFY(LCN_ENDEDITDONE, IDC_TASKLIST, &CdailycompletionDlg::OnTaskListEdit)
+	ON_MESSAGE(WM_MOUSEBUTTONDOWN, OnMouseButtonDown)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 	ON_WM_HOTKEY()
 	ON_WM_ACTIVATE()
 END_MESSAGE_MAP()
+
+// 鼠标钩子
+HHOOK glHook = NULL;
+LRESULT CALLBACK MouseProc(int nCode, WPARAM msg, LPARAM lparam)
+{
+	if (msg == WM_LBUTTONDOWN)
+	{
+		auto glWnd = CdailycompletionDlg::Instance();
+		if (glWnd && IsWindow(glWnd->GetSafeHwnd()))
+		{
+			PMOUSEHOOKSTRUCT mh = (PMOUSEHOOKSTRUCT)lparam;
+			POINT pt;
+			pt.x = mh->pt.x;
+			pt.y = mh->pt.y;
+			glWnd->SendMessage(WM_MOUSEBUTTONDOWN, 0, (LPARAM)&pt);
+		}
+	}
+	return CallNextHookEx(glHook, nCode, msg, lparam);
+}
+
+LRESULT CdailycompletionDlg::OnMouseButtonDown(WPARAM wParam, LPARAM lParam)
+{
+	if (!IsWindowVisible())return 0;
+	CRect rc;
+	GetClientRect(&rc);
+	ClientToScreen(&rc);
+	// 判断点击窗口外
+	if (!rc.PtInRect(*(POINT*)lParam))
+	{
+		if (!_bDontHide)
+		{
+			HideToTaskbar();
+		}
+	}
+	return 0;
+}
 
 CdailycompletionDlg::CdailycompletionDlg(CWnd* pParent /*=nullptr*/)
 	: CBaseTaskDlg(IDD_DAILYCOMPLETION_DIALOG, pParent)
@@ -138,7 +173,10 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_btnMenu.ShowWindow(SW_SHOW);
 		_btnMenu.SetFont(&font);//设置字体
 	}
-	// 日期
+	// 注册鼠标钩子
+	{
+		glHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, GetModuleHandle(NULL), 0);
+	}
 
 	RegisterHotKey(m_hWnd, 1001, MOD_CONTROL | MOD_SHIFT, 'A');
 	CenterWindow();
@@ -155,6 +193,13 @@ void CdailycompletionDlg::OnDestroy()
 	_taskList->DestroyWindow();
 
 	UnregisterHotKey(m_hWnd, 1001);
+
+	// 释放鼠标钩子
+	{
+		if (glHook) 
+			UnhookWindowsHookEx(glHook);
+	}
+	
 }
 
 // 如果向对话框添加最小化按钮，则需要下面的代码
@@ -254,10 +299,10 @@ void CdailycompletionDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 void CdailycompletionDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	__super::OnActivate(nState, pWndOther, bMinimized);
-	if (WA_INACTIVE == nState && !_bDontHide)
-	{
-		HideToTaskbar();
-	}
+	//if (WA_INACTIVE == nState && !_bDontHide)
+	//{
+	//	HideToTaskbar();
+	//}
 }
 
 void CdailycompletionDlg::OnTaskListEdit(NMHDR * pNMHDR, LRESULT * pResult)

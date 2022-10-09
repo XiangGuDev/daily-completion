@@ -15,10 +15,12 @@ namespace ControlUI
 class CTaskListCtrl;
 class CSettingsDlg;
 class CTimeSettingDlg;
-class CdailycompletionDlg : public CBaseTaskDlg, public DCController
+class CdailycompletionDlg : public CBaseTaskDlg, public DCController, public BaseSingleton<CdailycompletionDlg>
 {
-public:
+	friend class BaseSingleton<CdailycompletionDlg>;
+private:
 	CdailycompletionDlg(CWnd* pParent = nullptr);	// 标准构造函数
+public:
 	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DAILYCOMPLETION_DIALOG };
@@ -41,6 +43,7 @@ public:
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	afx_msg void OnTaskListEdit(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg LRESULT OnMouseButtonDown(WPARAM wParam, LPARAM lParam);
 private:
 	CBCGPButton _btnMenu; // 菜单
 	CBCGPButton _btnTimeSetting; // 菜单
