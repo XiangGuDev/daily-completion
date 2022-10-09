@@ -14,8 +14,6 @@ CTaskSaveUtility::CTaskSaveUtility()
 	if (!CFileTool::DirectoryExist(strPersistent)) CFileTool::CreateDirectory(strPersistent);
 	if (!CFileTool::DirectoryExist(strData)) CFileTool::CreateDirectory(strData);
 
-	::MessageBox(::GetActiveWindow(), L"strPersistent = " + strPersistent + L"\nstrData = " + strData, L"", MB_OK);
-
 	_strDataPath = CPathConfig::GetPersistentPath() + L"Data/" + filename + L".xml";
 	_strFixedPath = CPathConfig::GetPersistentPath() + L"Data/FixedTask.xml";
 }
