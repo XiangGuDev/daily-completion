@@ -80,7 +80,7 @@ void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec
 		elem->SetElementName(L"FixedTask");
 		elem->SetAttrValue(L"name", task->strName);
 		elem->SetAttrValue(L"fixed", CConvert::Bool2Text(task->bFixed));
-		elem->SetAttrValue(L"complete", CConvert::Bool2Text(task->bComplete));
+		elem->SetAttrValue(L"complete", CConvert::Bool2Text(false));
 	}
 	if (pRoot->GetChildElementCount() == 0)return;
 	docFixed.SaveFile(_strFixedPath, fmtXMLUTF8);
