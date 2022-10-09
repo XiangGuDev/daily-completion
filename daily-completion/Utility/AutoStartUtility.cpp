@@ -25,20 +25,26 @@ void AutoStartUtility::SetAutoStart(bool bAuto)
 		long result = RegGetValue(hKey, NULL, _T("PowerBoot"), RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
 		if (result == ERROR_SUCCESS)        //自启状态
 		{
-			//取消自动启动
-			lRet = RegDeleteValue(hKey, _T("PowerBoot"));
-			if (lRet == ERROR_SUCCESS)
+			if (!bAuto)
 			{
-				MessageBox(::GetActiveWindow(), _T("关闭自启成功"), _T(""), MB_OK);
+				//取消自动启动
+				lRet = RegDeleteValue(hKey, _T("PowerBoot"));
+				if (lRet == ERROR_SUCCESS)
+					MessageBox(::GetActiveWindow(), _T("关闭自启成功"), _T(""), MB_OK);
+				else
+					MessageBox(::GetActiveWindow(), _T("关闭自启失败"), _T(""), MB_OK);
 			}
 		}
 		else        //未自启状态
 		{
-			//设置自启
-			lRet = RegSetValueEx(hKey, _T("PowerBoot"), 0, REG_SZ, (LPBYTE)pFileName, (lstrlen(pFileName) + 1) * sizeof(TCHAR));
-			if (lRet == ERROR_SUCCESS)
+			if (bAuto)
 			{
-				MessageBox(::GetActiveWindow(), _T("设置自启成功"), _T(""), MB_OK);
+				//设置自启
+				lRet = RegSetValueEx(hKey, _T("PowerBoot"), 0, REG_SZ, (LPBYTE)pFileName, (lstrlen(pFileName) + 1) * sizeof(TCHAR));
+				if (lRet == ERROR_SUCCESS)
+					MessageBox(::GetActiveWindow(), _T("设置自启成功"), _T(""), MB_OK);
+				else
+					MessageBox(::GetActiveWindow(), _T("设置自启失败"), _T(""), MB_OK);
 			}
 		}
 
