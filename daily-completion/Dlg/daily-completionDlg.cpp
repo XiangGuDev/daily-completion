@@ -247,32 +247,36 @@ void CdailycompletionDlg::OnClickTimeSetting()
 
 void CdailycompletionDlg::OnClickMenu()
 {
-	CPoint curPt;
-	GetCursorPos(&curPt);
-	CMenu rightMenu;
-	if (!rightMenu.LoadMenu(IDR_MENU))
-		return;
+	_bDontHide = true;
+	do 
+	{
+		CPoint curPt;
+		GetCursorPos(&curPt);
+		CMenu rightMenu;
+		if (!rightMenu.LoadMenu(IDR_MENU))
+			break;
 
-	CMenu *pSubMenu = rightMenu.GetSubMenu(0);
-	if (pSubMenu == NULL)
-		return;
+		CMenu *pSubMenu = rightMenu.GetSubMenu(0);
+		if (pSubMenu == NULL)
+			break;
 
-	UINT nCmd = pSubMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD,
-		curPt.x, curPt.y, this);
-	if (nCmd == IDC_SETTINGS)
-	{
-		_bDontHide = true;
-		_settingsDlg->DoModal();
-		_bDontHide = false;
-	}
-	else if (nCmd == IDC_ABOUT)
-	{
-		MessageBox(L"YanF制作");
-	}
-	else if (nCmd == IDC_QUIT)
-	{
-		EndDialog(IDOK);
-	}
+		UINT nCmd = pSubMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD,
+			curPt.x, curPt.y, this);
+		if (nCmd == IDC_SETTINGS)
+		{
+			_settingsDlg->DoModal();
+		}
+		else if (nCmd == IDC_ABOUT)
+		{
+			MessageBox(L"YanF制作");
+		}
+		else if (nCmd == IDC_QUIT)
+		{
+			EndDialog(IDOK);
+		}
+	} while (false);
+	
+	_bDontHide = false;
 }
 
 
