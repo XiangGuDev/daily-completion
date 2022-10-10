@@ -31,17 +31,21 @@ CTimeDlg::CTimeDlg(CWnd* pParent /*=nullptr*/)
 
 void CTimeDlg::Reset()
 {
+	KillTimer(ID_TIMER);
 	_bStart = false;
 	UpdateTime();
 }
 
 void CTimeDlg::Start()
 {
+	KillTimer(ID_TIMER);
+	SetTimer(ID_TIMER, 1000, NULL);
 	_bStart = true;
 }
 
 void CTimeDlg::Pause()
 {
+	KillTimer(ID_TIMER);
 	_bStart = false;
 }
 
@@ -57,6 +61,15 @@ void CTimeDlg::UpdateTime()
 	CString str;
 	str.Format(L"%02d:%02d", m, s);
 	_content.SetWindowText(str);
+	if (_bStart && m == 0 && s == 0)
+	{
+		// 任务结束提示
+		Pause();
+		CString str;
+		_btnIcon.GetTooltip(str);
+		::MessageBox(::GetActiveWindow(), L"「" + str + "」已结束！", CPathConfig::GetProjectName(), MB_TOPMOST | MB_OK | MB_ICONINFORMATION);
+		ShowWindow(SW_HIDE);
+	}
 }
 
 void CTimeDlg::DoDataExchange(CDataExchange* pDX)
@@ -195,7 +208,7 @@ void CTimeDlg::OnClickIcon()
 #define  IDC_CLOSE 1000
 void CTimeDlg::OnRButtonUp(UINT nFlags, CPoint point)
 {
-	tagPOINT lpoint ;
+	tagPOINT lpoint;
 	::GetCursorPos(&lpoint);//得到鼠标位置
 	CMenu menu;
 	menu.CreatePopupMenu();
@@ -238,7 +251,6 @@ BOOL CTimeDlg::OnEraseBkgnd(CDC* pDC)
 	return true;
 }
 
-
 HBRUSH CTimeDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
@@ -254,7 +266,6 @@ HBRUSH CTimeDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 	return hbr;
 }
-
 
 void CTimeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
