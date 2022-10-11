@@ -34,6 +34,7 @@ void CTimeDlg::Reset()
 	KillTimer(ID_TIMER);
 	_bStart = false;
 	UpdateTime();
+	UpdateIcon();
 }
 
 void CTimeDlg::Start()
@@ -41,12 +42,14 @@ void CTimeDlg::Start()
 	KillTimer(ID_TIMER);
 	SetTimer(ID_TIMER, 1000, NULL);
 	_bStart = true;
+	UpdateIcon();
 }
 
 void CTimeDlg::Pause()
 {
 	KillTimer(ID_TIMER);
 	_bStart = false;
+	UpdateIcon();
 }
 
 void CTimeDlg::SetTip(const CString & tip)
@@ -75,6 +78,12 @@ void CTimeDlg::UpdateTime()
 void CTimeDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+}
+
+void CTimeDlg::UpdateIcon()
+{
+	_btnIcon.SetIcon(_iconList[_bStart ? 0 : 1]);
+	_btnIcon.RedrawWindow();
 }
 
 // CTimeDlg 消息处理程序
@@ -211,13 +220,12 @@ void CTimeDlg::OnClickIcon()
 	if (_bStart)
 	{
 		Pause();
-		_btnIcon.SetIcon(_iconList[1]);
 	}
 	else
 	{
 		Start();
-		_btnIcon.SetIcon(_iconList[0]);
 	}
+	UpdateIcon();
 }
 
 #define  IDC_CLOSE 1000
