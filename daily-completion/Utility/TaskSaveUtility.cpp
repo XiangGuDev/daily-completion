@@ -70,7 +70,6 @@ void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec
 	auto pRoot = docFixed.GetElementRoot();
 	if (pRoot == NULL)return;
 	auto elems = pRoot->GetChildElements();
-	if (inVec.empty()) return;
 	int idx = 0;
 	for (int i = 0; i < inVec.size(); ++i)
 	{
@@ -82,7 +81,6 @@ void CTaskSaveUtility::SaveFixed(const std::vector<std::shared_ptr<Task>> &inVec
 		elem->SetAttrValue(L"fixed", CConvert::Bool2Text(task->bFixed));
 		elem->SetAttrValue(L"complete", CConvert::Bool2Text(false));
 	}
-	if (pRoot->GetChildElementCount() == 0)return;
 	docFixed.SaveFile(_strFixedPath, fmtXMLUTF8);
 }
 
