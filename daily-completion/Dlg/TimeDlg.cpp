@@ -125,8 +125,9 @@ BOOL CTimeDlg::OnInitDialog()
 		CRect rcBtn = rcClient;
 		rcBtn.right = rcBtn.left + rcClient.Height();
 		_btnIcon.Create(L"", WS_CHILD | WS_VISIBLE, rcBtn, this, IDC_BTN_ICON);
-		HICON hIconOK = (HICON)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION);//加载图标，第四、五个参数为设置图标大小
-		_btnIcon.SetIcon(hIconOK);
+		_iconList.push_back((HICON)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR /*| LR_CREATEDIBSECTION*/));//加载图标，第四、五个参数为设置图标大小
+		_iconList.push_back((HICON)LoadImage(AfxGetResourceHandle(), CPathConfig::GetAppStartPath()+L"Config/stop.ico", IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR /*| LR_CREATEDIBSECTION */| LR_LOADFROMFILE));
+		_btnIcon.SetIcon(_iconList[0]);
 		_btnIcon.m_nFlatStyle = CBCGPButton::BUTTONSTYLE_NOBORDERS;
 		_btnIcon.ShowWindow(SW_SHOW);
 		_btnIcon.SetFont(&font);//设置字体
@@ -187,6 +188,11 @@ void CTimeDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 	KillTimer(ID_TIMER);
+
+	for (auto icon : _iconList)
+	{
+		DestroyIcon(icon);
+	}
 }
 
 void CTimeDlg::OnTimer(UINT_PTR nIDEvent)
@@ -202,7 +208,16 @@ void CTimeDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CTimeDlg::OnClickIcon()
 {
-	_bStart ? Pause() : Start();
+	if (_bStart)
+	{
+		Pause();
+		_btnIcon.SetIcon(_iconList[1]);
+	}
+	else
+	{
+		Start();
+		_btnIcon.SetIcon(_iconList[0]);
+	}
 }
 
 #define  IDC_CLOSE 1000

@@ -40,6 +40,7 @@ private:
 	CBCGPStatic _content;
 	CBCGPButton _btnIcon;
 	bool _bStart;
+	std::vector<HICON> _iconList;
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
