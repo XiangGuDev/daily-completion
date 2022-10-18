@@ -296,3 +296,13 @@ void CTimeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	__super::OnLButtonDown(nFlags, point);
 	PostMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
 }
+
+BOOL CTimeDlg::ShowWindow(int nCmdShow)
+{
+	if (nCmdShow == SW_HIDE)
+	{
+		// 隐藏前先重置计时器（防止后台计时并弹出对话框）
+		Reset();
+	}
+	return __super::ShowWindow(nCmdShow);
+}

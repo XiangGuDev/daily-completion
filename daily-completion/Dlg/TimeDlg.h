@@ -22,6 +22,7 @@ public:
 	void Start();
 	void Pause();
 	void SetTip(const CString &tip);
+	BOOL ShowWindow(int nCmdShow);
 protected:
 	void UpdateTime();
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
@@ -37,14 +38,13 @@ protected:
 	afx_msg void OnClickIcon();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg LRESULT OnNcHitTest(CPoint point);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 private:
 	CBCGPStatic _content;
 	CBCGPButton _btnIcon;
 	bool _bStart;
 	std::vector<HICON> _iconList;
-public:
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
