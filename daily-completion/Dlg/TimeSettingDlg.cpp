@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CTimeSettingDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDRESET, &CTimeSettingDlg::OnClickReset)
 END_MESSAGE_MAP()
 
 
@@ -50,13 +51,17 @@ BOOL CTimeSettingDlg::OnInitDialog()
 	_combTime.InsertString(5, L"30分钟");
 	_combTime.InsertString(6, L"45分钟");
 	_combTime.InsertString(7, L"1小时");
-	_combTime.SelectString(0, L"30分钟");
 
 	_combShow.InsertString(0, L"中心");
 	_combShow.InsertString(1, L"右上");
 	_combShow.InsertString(2, L"左上");
 	_combShow.InsertString(3, L"右下");
 	_combShow.InsertString(4, L"左下");
+
+	for(auto name : _nameCache)
+		_combName.InsertString(_combName.GetCount(), name);
+
+	OnClickReset();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -102,6 +107,13 @@ void CTimeSettingDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 }
 
+void CTimeSettingDlg::OnClickReset()
+{
+	_combTime.SelectString(0, L"30分钟");
+	_combShow.SetWindowText(L"");
+	_combName.SetWindowText(L"");
+}
+
 void CTimeSettingDlg::OnOK()
 {
 	// TODO: 在此添加专用代码和/或调用基类
@@ -129,6 +141,10 @@ void CTimeSettingDlg::OnOK()
 		LayoutUtility::SetControl(CTimeDlg::Instance(), LayoutUtility::ANCHOR_LEFTBOTTOM);
 
 	_combName.GetWindowText(str);
+	if (!str.IsEmpty())
+	{
+		_nameCache.push_back(str);
+	}
 	CTimeDlg::Instance()->SetTip(str);
 	CTimeDlg::Instance()->ShowWindow(SW_SHOW);
 	CTimeDlg::Instance()->Reset();

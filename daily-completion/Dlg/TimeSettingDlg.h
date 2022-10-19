@@ -22,11 +22,13 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnDestroy();
+	afx_msg void OnClickReset();
+	virtual void OnOK();
 private:
 	CComboBox _combTime;
 	CComboBox _combName;
 	CComboBox _combShow;
-	virtual void OnOK();
+	std::vector<CString> _nameCache;
 };
 
 
