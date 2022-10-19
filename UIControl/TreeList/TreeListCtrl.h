@@ -469,6 +469,12 @@ namespace ControlUI
 	class CONTROL_UI CTreeListCtrl : public CWnd
 	{
 	public:
+		enum BlendMode
+		{
+			eCover,
+			eMix,
+		};
+	public:
 		CTreeListCtrl();
 		virtual ~CTreeListCtrl();
 
@@ -476,6 +482,7 @@ namespace ControlUI
 		DECLARE_MESSAGE_MAP()
 
 	public:
+		void SetSelectBlendMode(BlendMode mode) { _selectColorMode = mode; }
 		/**
 		*  @brief   更新控件显示
 		*
@@ -1220,5 +1227,6 @@ namespace ControlUI
 		bool					_bIsTrim;				///< 是否去掉空格
 		bool					_bCollapseStyle;		///< 树控件折叠展开样式
 		float					_fHightLightFactor;     ///< 高亮色比重
+		BlendMode				_selectColorMode;		///< 选择混合模式
 	};
 }

@@ -23,6 +23,12 @@ CTaskListCtrl::CTaskListCtrl()
 	_OnSearchKeyChanged = std::bind(&CTaskListCtrl::OnSearchKeyChanged, this, std::placeholders::_1, std::placeholders::_2);
 	_OnUpdateGrid = std::bind(&CTaskListCtrl::OnUpdateGrid, this, std::placeholders::_1);
 	SetSingleSelect(false);
+	_selTopColor = RGB(204, 204, 204);
+	_selBottomColor = RGB(204, 204, 204);
+	_selBorderColor = RGB(204, 204, 204);
+	_hotTopColor = RGB(224, 224, 224);
+	_hotBottomColor = RGB(224, 224, 224);
+	_hotBorderColor = RGB(224, 224, 224);
 }
 
 int CTaskListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -54,6 +60,11 @@ void CTaskListCtrl::LoadIcon(const std::vector<CString>& pathList)
 	HICON icon = nullptr;
 	for (auto &iconPath : pathList)
 	{
+		if (CFileTool::GetFileExtendName(iconPath) != L".ico")
+		{
+			ASSERT(L"图标格式不正确！");
+			continue;
+		}
 		icon = (HICON)::LoadImage(AfxGetResourceHandle(), iconPath, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE | LR_LOADFROMFILE);
 		if (!icon) continue;
 		_imageList.Add(icon);

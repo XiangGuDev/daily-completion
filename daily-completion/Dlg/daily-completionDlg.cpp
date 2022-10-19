@@ -131,7 +131,10 @@ BOOL CdailycompletionDlg::OnInitDialog()
 		_taskList->ShowHeader(false);
 		_taskList->SetHasGrid(false);
 		_taskList->SetAutoColumnWidth();
-		_taskList->LoadIcon({ CPathConfig::GetAppStartPath()+L"Config/Fixed.ico" });
+		_taskList->LoadIcon({ 
+			CPathConfig::GetAppStartPath() + L"Config/Fixed.ico",
+			CPathConfig::GetAppStartPath()+L"Config/Accept.ico",
+			CPathConfig::GetAppStartPath() + L"Config/Warning.ico" });
 		_taskList->OnUpdateGrid(std::make_shared<UpdateGridEvent>());
 	}
 	// 搜索

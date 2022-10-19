@@ -49,23 +49,27 @@ void CTaskAdapter::GetCellData(size_t nCol, size_t nRow, const HCOLUMNDATA hColu
 	CString strField = hEditConfig->field;
 	if (strField == L"是否固定")
 	{
-		hEditConfig->image = _task->bFixed ? 0 : -1;
+		// 图标：0 固定 1 完成 2 未完成
+		if (_task->bComplete)
+		{
+			hEditConfig->image = 1;
+		}
+		else
+		{
+			hEditConfig->image = _task->bFixed ? 0 : 2;
+		}
 	}
 	if (strField == L"序号")
 	{
 		hCellData->textColor = RGB(115, 115, 115);
 	}
-	if (_task && _task->bComplete)
+	if (nRow % 2 == 0)
 	{
-		hCellData->backColor = RGB(111, 225, 111);
-	}
-	else if (nRow % 2 == 0)
-	{
-		hCellData->backColor = RGB(225, 225, 225);
+		hCellData->backColor = RGB(255, 255, 255);
 	}
 	else
 	{
-		hCellData->backColor = RGB(200, 200, 200);
+		hCellData->backColor = RGB(243, 243, 243);
 	}
 }
 

@@ -27,6 +27,7 @@ namespace ControlUI
 		_nEditRowIndex = -1;
 		_nEditColIndex = -1;
 		_treeColumn = 0;
+		_selectColorMode = BlendMode::eCover;
 		_selTopColor = RGB(220, 235, 252);
 		_selBottomColor = RGB(193, 219, 252);
 		_selBorderColor = RGB(170, 200, 245);
@@ -1970,21 +1971,45 @@ namespace ControlUI
 			short bottomB = GetBValue(hCellInfo->backColor);
 			if (hItemData->seleced)
 			{
-				topr = topr * GetRValue(_selTopColor) / 255;
-				topg = topg * GetGValue(_selTopColor) / 255;
-				topb = topb * GetBValue(_selTopColor) / 255;
-				bottomR = bottomR * GetRValue(_selBottomColor) / 255;
-				bottomG = bottomG * GetGValue(_selBottomColor) / 255;
-				bottomB = bottomB * GetBValue(_selBottomColor) / 255;
+				if (_selectColorMode == BlendMode::eCover)
+				{
+					topr = GetRValue(_selTopColor);
+					topg = GetGValue(_selTopColor);
+					topb = GetBValue(_selTopColor);
+					bottomR = GetRValue(_selBottomColor);
+					bottomG = GetGValue(_selBottomColor);
+					bottomB = GetBValue(_selBottomColor);
+				}
+				else
+				{
+					topr = topr * GetRValue(_selTopColor) / 255;
+					topg = topg * GetGValue(_selTopColor) / 255;
+					topb = topb * GetBValue(_selTopColor) / 255;
+					bottomR = bottomR * GetRValue(_selBottomColor) / 255;
+					bottomG = bottomG * GetGValue(_selBottomColor) / 255;
+					bottomB = bottomB * GetBValue(_selBottomColor) / 255;
+				}
 			}
 			else if (_hHoverRow == hItemData)
 			{
-				topr = topr * GetRValue(_hotTopColor) / 255;
-				topg = topg * GetGValue(_hotTopColor) / 255;
-				topb = topb * GetBValue(_hotTopColor) / 255;
-				bottomR = bottomR * GetRValue(_hotBottomColor) / 255;
-				bottomG = bottomG * GetGValue(_hotBottomColor) / 255;
-				bottomB = bottomB * GetBValue(_hotBottomColor) / 255;
+				if (_selectColorMode == BlendMode::eCover)
+				{
+					topr = GetRValue(_hotTopColor);
+					topg = GetGValue(_hotTopColor);
+					topb = GetBValue(_hotTopColor);
+					bottomR = GetRValue(_hotBottomColor);
+					bottomG = GetGValue(_hotBottomColor);
+					bottomB = GetBValue(_hotBottomColor);
+				}
+				else
+				{
+					topr = topr * GetRValue(_hotTopColor) / 255;
+					topg = topg * GetGValue(_hotTopColor) / 255;
+					topb = topb * GetBValue(_hotTopColor) / 255;
+					bottomR = bottomR * GetRValue(_hotBottomColor) / 255;
+					bottomG = bottomG * GetGValue(_hotBottomColor) / 255;
+					bottomB = bottomB * GetBValue(_hotBottomColor) / 255;
+				}
 			}
 			dcMemory.GradientVert(backgroundArea, RGB(topr, topg, topb), RGB(bottomR, bottomG, bottomB));
 		}
