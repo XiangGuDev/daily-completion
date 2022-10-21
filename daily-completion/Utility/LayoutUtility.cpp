@@ -24,8 +24,9 @@ void LayoutUtility::SetControl(CWnd * wnd, LayoutUtility::LAYOUT_ANCHOR flag)
 
 	if (flag == ANCHOR_CENTER)
 	{
-		wnd->CenterWindow();
-		return;
+		int x = width / 2 - rcWnd.Width() / 2;
+		int y = height / 2 - rcWnd.Height() / 2;
+		rcWnd.MoveToXY({ x,y });
 	}
 	else if (flag == ANCHOR_LEFTTOP)
 	{
@@ -33,7 +34,7 @@ void LayoutUtility::SetControl(CWnd * wnd, LayoutUtility::LAYOUT_ANCHOR flag)
 	}
 	else if (flag == ANCHOR_RIGHTTOP)
 	{
-		rcWnd.MoveToXY({width-rcWnd.Width(),0});
+		rcWnd.MoveToXY({ width - rcWnd.Width(),0 });
 	}
 	else if (flag == ANCHOR_LEFTBOTTOM)
 	{
@@ -41,8 +42,9 @@ void LayoutUtility::SetControl(CWnd * wnd, LayoutUtility::LAYOUT_ANCHOR flag)
 	}
 	else if (flag == ANCHOR_RIGHTBOTTOM)
 	{
-		rcWnd.MoveToXY({ width - rcWnd.Width(),height - rcWnd.Height()});
+		rcWnd.MoveToXY({ width - rcWnd.Width(),height - rcWnd.Height() });
 	}
+
 	wnd->MoveWindow(rcWnd);
 }
 
